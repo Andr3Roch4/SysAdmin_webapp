@@ -3,6 +3,10 @@
 ## Histórico de comandos usados
 
 ```
+python3 -m venv .venv
+```
+
+```
 django-admin startproject webapp .
 ```
 
