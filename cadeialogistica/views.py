@@ -4,8 +4,8 @@ from django.http import HttpResponse
 # Create your views here.
 
 def home(request):
-    # return render(request, "home.html")
-    return HttpResponse("Vamos colocar aqui o menu (mostrar_menu) -> criar html idealmente")
+    return render(request, "home.html")
+    #return HttpResponse("Vamos colocar aqui o menu (mostrar_menu) -> criar html idealmente")
 
 def encomenda(request):
     return HttpResponse("Vamos colocar aqui a função de encomenda")

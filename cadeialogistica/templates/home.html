@@ -1,0 +1,120 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadeia Logística</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        header {
+            background-color: #2a8859;
+            color: white;
+            padding: 20px 0;
+        }
+        header h1 {
+            font-size: 2.5em;
+        }
+        nav {
+            background-color: #333;
+            padding: 10px 0;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 25px;
+            display: inline-block;
+            margin: 0 15px;
+            font-size: 1.1em;
+        }
+        nav a:hover {
+            background-color: #5b9668;
+            border-radius: 4px;
+        }
+        .content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px;
+            flex-wrap: wrap;
+        }
+        .content .box {
+            background-color: white;
+            border-radius: 8px;
+            width: 250px;
+            margin: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .content .box img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        .content .box h3 {
+            color: #333;
+            padding: 15px;
+            font-size: 1.3em;
+        }
+        .content .box p {
+            color: #666;
+            padding: 0 15px 15px;
+            font-size: 1em;
+        }
+        footer {
+            background-color: #2a8859;
+            color: white;
+            padding: 10px 0;
+            margin-top: 40px;
+        }
+        footer p {
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Sistema de Compras e Logística</h1>
+</header>
+
+<nav>
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'encomenda' %}">Encomenda</a>
+    <a href="{% url 'comparar' %}">Comparar</a>
+    <a href="{% url 'ideal' %}">Ideal</a>
+    <a href="{% url 'criar' %}">Criar</a>
+</nav>
+
+<div class="content">
+    <div class="box">
+        <img src="{% static 'image_3.jpg' %}" alt="Logística">
+        <h3>Gestão Logística</h3>
+        <p>Controlo de todo o processo de transporte e armazenagem de produtos.</p>
+    </div>
+    <div class="box">
+        <img src="{% static 'image_1.jpg' %}" alt="Compras">
+        <h3>Gestão de Compras</h3>
+        <p>Facilite o processo de compras e integração com fornecedores.</p>
+    </div>
+    <div class="box">
+        <img src="{% static 'image_2.jpg' %}"  alt="Inventário">
+        <h3> Gestão de Produtos</h3>
+        <p>Mantenha o controlo dos estoques em tempo real.</p>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Cadeia Logística. Todos os direitos reservados.</p>
+</footer>
+
+</body>
+</html>
