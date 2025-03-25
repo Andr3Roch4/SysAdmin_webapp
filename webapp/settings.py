@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@tazl(o)cg+l8hsii1r2qr039b58pwt6*ggw#kv8-(9t5=9^#)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["clogistica.azurewebsites.net"]
 
 
 # Application definition
@@ -117,13 +117,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 import os
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join ( BASE_DIR, 'static'),
-]
+STATIC_URL = 'static/'
+#STATICFILES_DIRS = [
+#    os.path.join ( BASE_DIR, 'static'),
+#]
 
 # Para produção: pasta onde o collectstatic vai armazenar os arquivos
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+#STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
