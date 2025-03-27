@@ -13,12 +13,12 @@ def listar(request):
 
 
 def load(request):
-    prod="../csv/produto.csv"
-    dist="../csv/distribuidor.csv"
-    forn="../csv/fornecedor.csv"
-    trans="../csv/transportador.csv"
-    with open(prod, "r") as file:
-        r=csv.DictReader(file)
-        for row in r:
-            Produto.objects.create(**row)
+    prod="csv/produto.csv"
+    dist="csv/distribuidor.csv"
+    forn="csv/fornecedor.csv"
+    trans="csv/transportador.csv"
+    #with open(trans, "r") as file:
+        #r=csv.DictReader(file)
+        #for row in r:
+            #Transportador.objects.create(**row)
     return HttpResponse("OK")
