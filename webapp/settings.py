@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@tazl(o)cg+l8hsii1r2qr039b58pwt6*ggw#kv8-(9t5=9^#)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["clogistica.azurewebsites.net"]
+ALLOWED_HOSTS = ["clogistica.azurewebsites.net", "127.0.0.1"]
 
 
 # Application definition
@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cadeialogistica'
+    'cadeialogistica',
+    'api'
 ]
 
 MIDDLEWARE = [
