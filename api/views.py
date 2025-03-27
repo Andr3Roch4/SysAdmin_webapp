@@ -1,14 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from .models import Produto, Distribuidor, Fornecedor, Transportador
+from django.core import serializers
 import csv
 
 # Create your views here.
 
 def listar(request):
-    produtos=Produto.objects.all()
-    data = [{'nome': produto.nome, 'peso_carregamento': produto.peso_carregamento, 'agua': produto.agua, 'luz': produto.luz, 'co2': produto.CO2, 'categoria': produto.cat} for produto in produtos]
-    return JsonResponse(data, safe=False)
+    data=Produto.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type='application/json')
 
 
 def load(request):
@@ -19,5 +19,5 @@ def load(request):
     with open(prod, "r") as file:
         r=csv.DictReader(file)
         for row in r:
-            Produto.objects.create(row)
+            Produto.objects.create(**row)
     return HttpResponse("OK")
