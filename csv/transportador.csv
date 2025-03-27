@@ -1,0 +1,52 @@
+nome,local,coefCO2,coefLuz
+TransportesRapidos,Lisboa,1.2,0.8
+LogisticaGlobal,Porto,1.3,0.9
+EntregaExpressa,Braga,1.1,1
+TransporteSeguro,Coimbra,1.4,1.1
+LogisticaMundial,Sintra,1.3,0.9
+TransporteVeloz,Amadora,1.2,1.2
+CaminhoCerto,Viseu,1.5,1
+TransporteRapido,Funchal,1.4,0.8
+EnvioAgil,Leiria,1.3,1
+TransporteTotal,Setubal,1.1,0.9
+TransLogistica,Guimaraes,1.2,1
+RotaSegura,Cascais,1.3,0.8
+MovimentacaoRapida,Albufeira,1.4,1.1
+TransporteFacil,Porto,1.1,1
+EnviosUrgentes,Lagos,1.2,0.9
+RapidezNoTransporte,Vila Real,1.3,1
+EnvioDeCarga,Braga,1.5,0.7
+TransportesAL,Alcobaca,1.3,1.1
+TransporteAgil,Figueira Da Foz,1.4,1
+RotaDoTransporte,Santarem,1.2,1
+ExpressoDeCarga,Evora,1.3,1
+TransporteGo,Lisboa,1.2,0.8
+VelozMovimento,Povoa De Varzim,1.1,0.9
+LogisticaNova,Loule,1.3,1.1
+TransportesAS,Amadora,1.2,0.8
+ExpressMovimento,Porto,1.4,1.2
+MovimentoSeguro,Funchal,1.3,1
+CargaRapida,Aveiro,1.1,0.9
+TransportePleno,Lisboa,1.2,1
+TransAgil,Cascais,1.4,0.8
+CargaExpressa,Leiria,1.3,1.1
+TransportadoraRapida,Santarem,1.2,1
+LogisticaExpresso,Guimaraes,1.1,1
+TransporteGlobal,Lisboa,1.4,0.9
+TransporteVeloz,Braga,1.3,1
+CargaDeConfianca,Porto,1.2,1
+ExpressoCarga,Setubal,1.4,1
+TransporteAvancado,Viseu,1.2,0.9
+EnviosAgeis,Sines,1.3,1
+TransporteAL,Sintra,1.3,1.1
+RapidezNoEnvio,Cascais,1.1,1
+LogisticaPrioritaria,Funchal,1.2,0.8
+EntregaExpress,Porto,1.3,1.2
+RotaDeCargas,Braga,1.2,1
+TransporteAgil,Lagos,1.4,1
+ExpressoLog,Coimbra,1.1,0.9
+Logistica24h,Santarem,1.3,1.2
+CargasSeguras,Figueira Da Foz,1.4,1
+CargaRapida,Setubal,1.3,0.9
+MovimentoDeCargas,Lisboa,1.1,1
+TransporteAgil,Albufeira,1.2,0.8
