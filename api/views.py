@@ -4,6 +4,7 @@ from .models import Produto, Distribuidor, Fornecedor, Transportador
 from django.core import serializers
 import csv
 from django.views.decorators.csrf import csrf_exempt
+import json
 
 # Create your views here.
 
@@ -119,19 +120,88 @@ def produto(request):
         return HttpResponse("del")
 
 @csrf_exempt
-def fornecedor(request):
+def fornecedor(request):                                                                   
     if request.method == "GET":
-        # search
-        return HttpResponse("OK")
+        nome=request.GET.get('nome', '').strip().lower()
+        local=request.GET.get('local', '').strip()
+        categoria=request.GET.get('cat', '').strip()
+        id=request.GET.get('id', '').strip()
+
+        f=Fornecedor.objects.all().filter(nome__icontains=nome, local__icontains=local, cat__icontains=categoria, id__icontains=id)
+        return JsonResponse({"fornecedor":list(f.values())})
     elif request.method == "POST":
-        # create
-        return HttpResponse("coisa")
+        try:
+            data = json.loads(request.body)
+
+            nome=data.get('nome', '').strip().lower()
+            coefAgua=data.get('coefAgua', '').strip().lower()
+            coefLuz=data.get('coefLuz', '').strip().lower()
+            coefCO2=data.get('coefCO2', '').strip().lower()
+            local=data.get('local', '').strip().lower()
+            cat=data.get('cat', '').strip().lower()
+
+            if Fornecedor.objects.filter(nome__iexact=nome, local__iexact=local, cat__iexact=cat).exists():
+                return JsonResponse({"erro": "Fornecedor já existe."}, status=400)
+            
+            fornecedor=Fornecedor.objects.create(
+                nome=nome,
+                coefAgua=coefAgua,
+                coefLuz=coefLuz,
+                coefCO2=coefCO2,
+                local=local,
+                cat=cat
+            )
+               
+            return JsonResponse({"nome":Fornecedor.nome}, status=201)
+    
+        except json.JSONDecodeError:
+            return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
     elif request.method == "PUT":
-        # alterações
-        return HttpResponse("put")
+        try:
+        # Carregar dados do corpo da requisição
+            data = json.loads(request.body)
+
+        # Obter o ID do fornecedor
+            id = data.get('id')
+        
+            fornecedor = Fornecedor.objects.filter(id=id).first()
+
+            if not fornecedor:
+                return JsonResponse({"erro": "Fornecedor não encontrado."}, status=404)
+
+            fornecedor.nome = data.get('nome', fornecedor.nome).strip().lower()
+            fornecedor.coefAgua = data.get('coefAgua', fornecedor.coefAgua).strip().lower()
+            fornecedor.coefLuz = data.get('coefLuz', fornecedor.coefLuz).strip().lower()
+            fornecedor.coefCO2 = data.get('coefCO2', fornecedor.coefCO2).strip().lower()
+            fornecedor.local = data.get('local', fornecedor.local).strip().lower()
+            fornecedor.cat = data.get('cat', fornecedor.cat).strip().lower()
+
+            fornecedor.save()
+
+            return JsonResponse({"mensagem": "Fornecedor atualizado com sucesso", "nome": fornecedor.nome})
+
+        except json.JSONDecodeError:
+            return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
     elif request.method == "DELETE":
-        # remover
-        return HttpResponse("del")
+        try:
+            data = json.loads(request.body)
+
+        # Obter o ID do fornecedor
+            id = data.get('id')
+
+        # Buscar o fornecedor com o ID
+            fornecedor = Fornecedor.objects.filter(id=id).first()
+
+            if not fornecedor:
+                return JsonResponse({"erro": "Fornecedor não encontrado."}, status=404)
+
+            fornecedor.delete()
+
+            return JsonResponse({"mensagem": "Fornecedor removido com sucesso."})
+
+        except json.JSONDecodeError:
+            return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
+
 
 @csrf_exempt
 def distribuidor(request):
