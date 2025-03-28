@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from .models import Produto, Distribuidor, Fornecedor, Transportador
 from django.core import serializers
 import csv
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
@@ -73,7 +74,6 @@ def listar(request):
 
     return JsonResponse(data, safe=False)
 
-
     #param = request.GET.get('q', '').strip()  # Obtém o parâmetro 'q' da URL
     #queryset = Produto.objects.all()
     #if param:  # Se 'q' foi passado na URL, aplica o filtro
@@ -102,6 +102,73 @@ def listar(request):
     #json_data=serializers.serialize("json", data)                   # Transforma a data em json
     #return HttpResponse(json_data,# content_type='application/json') # Como já temos a data em json, temos de fazer Httpresponse e não JsonResponse
 
+@csrf_exempt
+def produto(request):
+    if request.method == "GET":
+        # search
+        return HttpResponse("OK")
+    elif request.method == "POST":
+        # create
+        params=request.POST.get("nome").strip()
+        return HttpResponse(params)
+    elif request.method == "PUT":
+        # alterações
+        return HttpResponse("put")
+    elif request.method == "DELETE":
+        # remover
+        return HttpResponse("del")
+
+@csrf_exempt
+def fornecedor(request):
+    if request.method == "GET":
+        # search
+        return HttpResponse("OK")
+    elif request.method == "POST":
+        # create
+        return HttpResponse("coisa")
+    elif request.method == "PUT":
+        # alterações
+        return HttpResponse("put")
+    elif request.method == "DELETE":
+        # remover
+        return HttpResponse("del")
+
+@csrf_exempt
+def distribuidor(request):
+    if request.method == "GET":
+        # search
+        return HttpResponse("OK")
+    elif request.method == "POST":
+        # create
+        params=request.POST.get("nome")
+        return JsonResponse(params)
+    elif request.method == "PUT":
+        # alterações
+        return HttpResponse("put")
+    elif request.method == "DELETE":
+        # remover
+        return HttpResponse("del")
+
+@csrf_exempt
+def transportador(request):
+    if request.method == "GET":
+        # search
+        return HttpResponse("OK")
+    elif request.method == "POST":
+        # create
+        return HttpResponse("coisa")
+    elif request.method == "PUT":
+        # alterações
+        return HttpResponse("put")
+    elif request.method == "DELETE":
+        # remover
+        return HttpResponse("del")
+
+def impacto(request):
+    pass
+
+def ideal(request):
+    pass
 
 def load(request):
     prod="csv/produto.csv"
