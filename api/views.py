@@ -207,12 +207,33 @@ def fornecedor(request):
 @csrf_exempt
 def distribuidor(request):
     if request.method == "GET":
-        # search
-        return HttpResponse("OK")
+
+        nome=request.GET.get("nome", "").strip().lower()
+        local=request.GET.get("local", "").strip().lower()
+        id=request.GET.get("id", "").strip().lower()
+
+        dist=Distribuidor.objects.all().filter(nome__icontains=nome, local__icontains=local, id__icontains=id)
+
+        return JsonResponse({"distribuidor":list(dist.values())})
+    
     elif request.method == "POST":
         # create
-        params=request.POST.get("nome")
-        return JsonResponse(params)
+        if request.POST.get():
+            nome=request.POST.get("nome")
+            local=request.POST.get("local")
+            coefluz=request.POST.get("coefluz", "1")
+            
+            if nome and local:
+                Distribuidor.objects.create(nome,local,coefluz)
+                return JsonResponse({"success":"New Distribuidor object was created."})
+            
+            else:
+                return JsonResponse({"failed":"Couldn't create the object, send valid parameters."})
+            
+        else:
+            
+            return JsonResponse({"failed":"Couldn't create the object, send valid parameters."})
+        
     elif request.method == "PUT":
         # alterações
         return HttpResponse("put")
@@ -223,8 +244,15 @@ def distribuidor(request):
 @csrf_exempt
 def transportador(request):
     if request.method == "GET":
-        # search
-        return HttpResponse("OK")
+
+        nome=request.GET.get("nome", "").strip().lower()
+        local=request.GET.get("local", "").strip().lower()
+        id=request.GET.get("id", "").strip().lower()
+
+        trans=Transportador.objects.all().filter(nome__icontains=nome, local__icontains=local, id__icontains=id)
+
+        return JsonResponse({"transportador":list(trans.values())})
+    
     elif request.method == "POST":
         # create
         return HttpResponse("coisa")
