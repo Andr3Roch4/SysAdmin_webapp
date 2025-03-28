@@ -129,6 +129,7 @@ def fornecedor(request):
 
         f=Fornecedor.objects.all().filter(nome__icontains=nome, local__icontains=local, cat__icontains=categoria, id__icontains=id)
         return JsonResponse({"fornecedor":list(f.values())})
+
     elif request.method == "POST":
         try:
             data = json.loads(request.body)
