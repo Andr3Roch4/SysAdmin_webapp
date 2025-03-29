@@ -182,7 +182,7 @@ def fornecedor(request):
     
     elif request.method == "POST":
 
-        if request.POST.get():
+        try:
             nome=request.POST.get('nome').strip().capitalize()
             coefAgua=float(request.POST.get('coefAgua', 1))
             coefLuz=float(request.POST.get('coefLuz', 1))
@@ -207,8 +207,10 @@ def fornecedor(request):
                     return JsonResponse({ 
                         "mensagem": f'Fornecedor "{fornecedor.nome}" inserido com sucesso!'
                         }, status=201)
-        else:
+        except AttributeError:
             return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
+        except ValueError:
+            return JsonResponse({"erro": "Valor inválido para coeficientes."}, status=400)
         
     elif request.method == "PUT":
 
