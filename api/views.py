@@ -255,9 +255,9 @@ def fornecedor(request):
                 return JsonResponse({"erro": "Fornecedor não encontrado."}, status=404)
 
             fornecedor.nome = data.get('nome', fornecedor.nome).strip().capitalize()
-            fornecedor.coefAgua = float(data.get('coefagua', fornecedor.coefAgua).strip())
-            fornecedor.coefLuz = float(data.get('coefluz', fornecedor.coefLuz).strip())
-            fornecedor.coefCO2 = float(data.get('coefco2', fornecedor.coefCO2).strip())
+            fornecedor.coefAgua = float(data.get('coefagua', fornecedor.coefAgua))
+            fornecedor.coefLuz = float(data.get('coefluz', fornecedor.coefLuz))
+            fornecedor.coefCO2 = float(data.get('coefco2', fornecedor.coefCO2))
             fornecedor.local = data.get('local', fornecedor.local).strip().capitalize()
             fornecedor.cat = data.get('cat', fornecedor.cat).strip().capitalize()
 
