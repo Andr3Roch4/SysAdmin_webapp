@@ -117,14 +117,12 @@ def produto(request):
     
     elif request.method == "POST":
         try:
-            data = json.loads(request.body)
-
-            nome=data.get('nome', '').strip().capitalize()
-            peso_carregamento=int(data.get('peso_carregamento', 0)) 
-            agua=int(data.get('agua', 0)) 
-            luz=int(data.get('luz', 0))
-            co2=int(data.get('CO2', 0))
-            cat=data.get('cat', '').strip().capitalize()
+            nome=request.POST.get('nome', '').strip().capitalize()
+            peso_carregamento=int(request.POST.get('peso_carregamento')) 
+            agua=int(request.POST.get('agua')) 
+            luz=int(request.POST.get('luz'))
+            co2=int(request.POST.get('CO2'))
+            cat=request.POST.get('cat', '').strip().capitalize()
 
             if Produto.objects.filter(nome__iexact=nome).exists():
                 return JsonResponse({"erro": "Este produto já existe!"}, status=400)
