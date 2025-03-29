@@ -105,28 +105,24 @@ def listar(request):
 
 @csrf_exempt
 def produto(request):
-    if request.method == "GET":
 
+    if request.method == "GET":
         nome=request.GET.get('nome', '').strip().lower()
         categoria=request.GET.get('cat', '').strip()
-        id=request.GET.get('id', '').strip()
-
+        id=request.GET.get('id', '')
         p=Produto.objects.all().filter(nome__icontains=nome, cat__icontains=categoria, id__icontains=id)
-
         return JsonResponse({"produto":list(p.values())})
     
     elif request.method == "POST":
         try:
-            nome=request.POST.get('nome', '').strip().capitalize()
+            nome=request.POST.get('nome').strip().capitalize()
             peso_carregamento=int(request.POST.get('peso_carregamento')) 
             agua=int(request.POST.get('agua')) 
             luz=int(request.POST.get('luz'))
-            co2=int(request.POST.get('CO2'))
-            cat=request.POST.get('cat', '').strip().capitalize()
-
+            co2=int(request.POST.get('co2'))
+            cat=request.POST.get('cat').strip().capitalize()
             if Produto.objects.filter(nome__iexact=nome).exists():
-                return JsonResponse({"erro": "Este produto já existe!"}, status=400)
-            
+                return JsonResponse({"erro": "Produto já existe na Base de Dados!."}, status=400)   
             produto=Produto.objects.create(
                 nome=nome,
                 peso_carregamento=peso_carregamento,
@@ -134,67 +130,54 @@ def produto(request):
                 luz=luz,
                 CO2=co2,
                 cat=cat
-            )
-               
+            )  
             return JsonResponse({
-                "produto": produto.nome, 
-                "mensagem": f'Produto "{produto.nome}" inserido com sucesso!'
+                "mensagem": f"Produto '{produto.nome}' inserido com sucesso!"
                 }, status=201)
-    
-        except json.JSONDecodeError:
-            return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
+        except AttributeError:
+            return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
+        except ValueError:
+            return JsonResponse({"erro": "Valor inválido."}, status=400)
         
     elif request.method == "PUT":       
         try:
-            # Carregar dados do corpo da requisição
-            data = json.loads(request.body)
-        
-            # Obter o ID
-            id = data.get('id').strip()
-        
+            data = json.loads(request.body)         # Carregar dados do corpo da requisição
+            id = data.get('id')                     # Obter o ID
             produto = Produto.objects.filter(id=id).first()
-
             if not produto:
-                return JsonResponse({"erro": "Fornecedor não encontrado."}, status=404)
-
-            produto.nome = data.get('nome', produto.nome).strip().capitalize()
-            produto.peso_carregamento = int(data.get('peso_carregamento', produto.peso_carregamento))
-            produto.agua = int(data.get('agua', produto.agua))
-            produto.luz = int(data.get('luz', produto.luz))
-            produto.CO2 = int(data.get('CO2', produto.CO2))
-            produto.cat = data.get('cat', produto.cat).strip().capitalize()
-
-            produto.save()
-
-            return JsonResponse({"mensagem": f'Produto "{produto.nome}" atualizado com sucesso'})
-
+                return JsonResponse({"erro": "Produto não encontrado."}, status=404)
+            else:
+                produto.nome = data.get('nome', produto.nome).strip().capitalize()
+                produto.peso_carregamento = int(data.get('peso_carregamento', produto.peso_carregamento))
+                produto.agua = int(data.get('agua', produto.agua))
+                produto.luz = int(data.get('luz', produto.luz))
+                produto.CO2 = int(data.get('CO2', produto.CO2))
+                produto.cat = data.get('cat', produto.cat).strip().capitalize()
+                produto.save()
+                return JsonResponse({"mensagem": f'Produto "{produto.nome}" atualizado com sucesso'})
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
         except AttributeError:
             return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
         except ValueError:
-            return JsonResponse({"erro": "Valor inválido para coeficientes."}, status=400)
-
+            return JsonResponse({"erro": "Valor inválido."}, status=400)
 
     elif request.method == "DELETE":
         try:
             data = json.loads(request.body)
-
-        # Obter o ID do produto
-            id = data.get('id')
-
-        # Buscar produto com base no id
-            produto = Produto.objects.filter(id=id).first()
-
+            id = data.get('id')                                 # Obter o ID do produto
+            produto = Produto.objects.filter(id=id).first()     # Buscar produto com base no id
             if not produto:
                 return JsonResponse({"erro": "Produto não encontrado."}, status=404)
-
-            produto.delete()
-
-            return JsonResponse({"mensagem": "Produto removido com sucesso!"})
-
+            else:
+                produto.delete()
+                return JsonResponse({"mensagem": f'Produto com id {id} removido com sucesso.'})
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
+        except AttributeError:
+            return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
+        except ValueError:
+            return JsonResponse({"erro": "Valor inválido."}, status=400)
 
 @csrf_exempt
 def fornecedor(request):                                                                   
@@ -202,14 +185,11 @@ def fornecedor(request):
         nome=request.GET.get('nome', '').strip().lower()
         local=request.GET.get('local', '').strip()
         categoria=request.GET.get('cat', '').strip()
-        id=request.GET.get('id', '').strip()
-
+        id=request.GET.get('id', '')
         f=Fornecedor.objects.all().filter(nome__icontains=nome, local__icontains=local, cat__icontains=categoria, id__icontains=id)
-
         return JsonResponse({"fornecedor":list(f.values())})
     
     elif request.method == "POST":
-
         try:
             nome=request.POST.get('nome').strip().capitalize()
             coefAgua=float(request.POST.get('coefagua', 1))
@@ -217,256 +197,192 @@ def fornecedor(request):
             coefCO2=float(request.POST.get('coefco2', 1))
             local=request.POST.get('local').strip().capitalize()
             cat=request.POST.get('cat').strip().capitalize()
-
-            if nome and local and cat:  # Acho que não é preciso
-
-                if Fornecedor.objects.filter(nome=nome).exists():
-                    return JsonResponse({"erro": "Fornecedor já existe na Base de Dados!."}, status=400)
-                else:
-                    fornecedor=Fornecedor.objects.create(
-                        nome=nome,
-                        coefAgua=coefAgua,
-                        coefLuz=coefLuz,
-                        coefCO2=coefCO2,
-                        local=local,
-                        cat=cat
-                    )
-                        
-                    return JsonResponse({ 
-                        "mensagem": f'Fornecedor "{fornecedor.nome}" inserido com sucesso!'
-                        }, status=201)
+            if Fornecedor.objects.filter(nome=nome).exists():
+                return JsonResponse({"erro": "Fornecedor já existe na Base de Dados!."}, status=400)
+            else:
+                fornecedor=Fornecedor.objects.create(
+                    nome=nome,
+                    coefAgua=coefAgua,
+                    coefLuz=coefLuz,
+                    coefCO2=coefCO2,
+                    local=local,
+                    cat=cat
+                )
+                return JsonResponse({ 
+                    "mensagem": f'Fornecedor "{fornecedor.nome}" inserido com sucesso!'
+                    }, status=201)
         except AttributeError:
             return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
         except ValueError:
-            return JsonResponse({"erro": "Valor inválido para coeficientes."}, status=400)
+            return JsonResponse({"erro": "Valor inválido."}, status=400)
         
     elif request.method == "PUT":
-
         try:
-            # Carregar dados do corpo da requisição
-            data = json.loads(request.body)
-
-            # Obter o ID do fornecedor
-            id = data.get('id').strip()
-        
+            data = json.loads(request.body)                     # Carregar dados do corpo da requisição
+            id = data.get('id')                                 # Obter o ID do fornecedor
             fornecedor = Fornecedor.objects.filter(id=id).first()
-
             if not fornecedor:
                 return JsonResponse({"erro": "Fornecedor não encontrado."}, status=404)
-
-            fornecedor.nome = data.get('nome', fornecedor.nome).strip().capitalize()
-            fornecedor.coefAgua = float(data.get('coefagua', fornecedor.coefAgua))
-            fornecedor.coefLuz = float(data.get('coefluz', fornecedor.coefLuz))
-            fornecedor.coefCO2 = float(data.get('coefco2', fornecedor.coefCO2))
-            fornecedor.local = data.get('local', fornecedor.local).strip().capitalize()
-            fornecedor.cat = data.get('cat', fornecedor.cat).strip().capitalize()
-
-            fornecedor.save()
-
-            return JsonResponse({"mensagem": f'Fornecedor "{fornecedor.nome}" atualizado com sucesso'})
-
+            else:
+                fornecedor.nome = data.get('nome', fornecedor.nome).strip().capitalize()
+                fornecedor.coefAgua = float(data.get('coefagua', fornecedor.coefAgua))
+                fornecedor.coefLuz = float(data.get('coefluz', fornecedor.coefLuz))
+                fornecedor.coefCO2 = float(data.get('coefco2', fornecedor.coefCO2))
+                fornecedor.local = data.get('local', fornecedor.local).strip().capitalize()
+                fornecedor.cat = data.get('cat', fornecedor.cat).strip().capitalize()
+                fornecedor.save()
+                return JsonResponse({"mensagem": f"Fornecedor '{fornecedor.nome}' atualizado com sucesso"})
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
         except AttributeError:
             return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
         except ValueError:
-            return JsonResponse({"erro": "Valor inválido para coeficientes."}, status=400)
+            return JsonResponse({"erro": "Valor inválido."}, status=400)
         
     elif request.method == "DELETE":
         try:
             data = json.loads(request.body)
-
-            # Obter o ID do fornecedor
-            id = data.get('id').strip()
-
-            # Buscar o fornecedor com o ID
-            fornecedor = Fornecedor.objects.filter(id=id).first()
-
+            id = data.get('id')                                     # Obter o ID do fornecedor
+            fornecedor = Fornecedor.objects.filter(id=id).first()   # Buscar o fornecedor com o ID
             if not fornecedor:
                 return JsonResponse({"erro": "Fornecedor não encontrado."}, status=404)
-
-            fornecedor.delete()
-
-            return JsonResponse({"mensagem": f'Fornecedor com id {id} removido com sucesso.'})
-
+            else:
+                fornecedor.delete()
+                return JsonResponse({"mensagem": f'Fornecedor com id {id} removido com sucesso.'})
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
         except AttributeError:
             return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
-
+        except ValueError:
+            return JsonResponse({"erro": "Valor inválido."}, status=400)
 
 @csrf_exempt
 def distribuidor(request):
     if request.method == "GET":
-
         nome=request.GET.get("nome", "").strip().lower()
         local=request.GET.get("local", "").strip().lower()
-        id=request.GET.get("id", "").strip().lower()
-
+        id=request.GET.get("id", "")
         dist=Distribuidor.objects.all().filter(nome__icontains=nome, local__icontains=local, id__icontains=id)
-
         return JsonResponse({"distribuidor":list(dist.values())})
     
     elif request.method == "POST":
-        
         try:
             nome=request.POST.get("nome").strip().capitalize()
-            local=request.POST.get("local").strip()
+            local=request.POST.get("local").strip().capitalize()
             coefluz=float(request.POST.get("coefluz", 1))
-            
-            if nome and local:    # Acho que não é preciso
-
-                if Distribuidor.objects.filter(nome=nome).exists():
-                    return JsonResponse({"erro": "Distribuidor já existe na Base de Dados!."}, status=400)
-                else:
-                    new_d=Distribuidor.objects.create(nome=nome,local=local,coefluz=coefluz)
-                    return JsonResponse({
-                        "mensagem": f'Distribuidor "{new_d.nome}" inserido com sucesso!'
-                        }, status=201)
-            
+            if Distribuidor.objects.filter(nome=nome).exists():
+                return JsonResponse({"erro": "Distribuidor já existe na Base de Dados!."}, status=400)
+            else:
+                new_d=Distribuidor.objects.create(nome=nome,local=local,coefluz=coefluz)
+                return JsonResponse({
+                    "mensagem": f'Distribuidor "{new_d.nome}" inserido com sucesso!'
+                    }, status=201)
         except AttributeError:
             return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
         except ValueError:
-            return JsonResponse({"erro": "Valor inválido para coeficientes."}, status=400)
+            return JsonResponse({"erro": "Valor inválido."}, status=400)
         
     elif request.method == "PUT":
-
         try:
-            # Carregar dados do corpo da requisição
-            data = json.loads(request.body)
-
-            # Obter o ID do distribuidor
-            id = data.get('id').strip()
-        
+            data = json.loads(request.body)                         # Carregar dados do corpo da requisição
+            id = data.get('id')                                     # Obter o ID do distribuidor
             d = Distribuidor.objects.filter(id=id).first()
-
             if not d:
                 return JsonResponse({"erro": "Distribuidor não encontrado."}, status=404)
-
-            d.nome = data.get('nome', d.nome).strip().capitalize()
-            d.local = data.get('local', d.local).strip().capitalize()
-            d.coefLuz = float(data.get('coefluz', d.coefLuz))
-
-            d.save()
-
-            return JsonResponse({"mensagem": f'Distribuidor "{d.nome}" atualizado com sucesso'})
-
+            else:
+                d.nome = data.get('nome', d.nome).strip().capitalize()
+                d.local = data.get('local', d.local).strip().capitalize()
+                d.coefLuz = float(data.get('coefluz', d.coefLuz))
+                d.save()
+                return JsonResponse({"mensagem": f'Distribuidor "{d.nome}" atualizado com sucesso'})
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
         except AttributeError:
             return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
         except ValueError:
-            return JsonResponse({"erro": "Valor inválido para coeficientes."}, status=400)
+            return JsonResponse({"erro": "Valor inválido."}, status=400)
         
     elif request.method == "DELETE":
         try:
             data = json.loads(request.body)
-
-            # Obter o ID do distribuidor
-            id = data.get('id').strip()
-
-            # Buscar o distribuidor com o ID
-            d = Distribuidor.objects.filter(id=id).first()
-
+            id = data.get('id')                                     # Obter o ID do distribuidor
+            d = Distribuidor.objects.filter(id=id).first()          # Buscar o distribuidor com o ID
             if not d:
                 return JsonResponse({"erro": "Distribuidor não encontrado."}, status=404)
-
-            d.delete()
-
-            return JsonResponse({"mensagem": f'Distribuidor com id {id} removido com sucesso.'})
-
+            else:
+                d.delete()
+                return JsonResponse({"mensagem": f'Distribuidor com id {id} removido com sucesso.'})
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
         except AttributeError:
             return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
+        except ValueError:
+            return JsonResponse({"erro": "Valor inválido."}, status=400)
 
 @csrf_exempt
 def transportador(request):
     if request.method == "GET":
-
         nome=request.GET.get("nome", "").strip().lower()
         local=request.GET.get("local", "").strip().lower()
-        id=request.GET.get("id", "").strip().lower()
-
+        id=request.GET.get("id", "")
         t=Transportador.objects.all().filter(nome__icontains=nome, local__icontains=local, id__icontains=id)
-
         return JsonResponse({"transportador":list(t.values())})
     
     elif request.method == "POST":
-
         try:
             nome=request.POST.get("nome").strip().capitalize()
-            local=request.POST.get("local").strip()
+            local=request.POST.get("local").strip().capitalize()
             coefluz=float(request.POST.get("coefluz", 1))
             coefCO2=float(request.POST.get("coefco2", 1))
-            
-            if nome and local:    # Acho que não é preciso
-
-                if Transportador.objects.filter(nome=nome).exists():
-                    return JsonResponse({"erro": "Transportador já existe na Base de Dados!."}, status=400)
-                else:
-                    new_t=Transportador.objects.create(nome=nome,local=local,coefluz=coefluz, coefCO2=coefCO2)
-                    return JsonResponse({
-                        "mensagem": f'Transportador "{new_t.nome}" inserido com sucesso!'
-                        }, status=201)
-            
+            if Transportador.objects.filter(nome=nome).exists():
+                return JsonResponse({"erro": "Transportador já existe na Base de Dados!."}, status=400)
+            else:
+                new_t=Transportador.objects.create(nome=nome,local=local,coefluz=coefluz,coefCO2=coefCO2)
+                return JsonResponse({
+                    "mensagem": f'Transportador "{new_t.nome}" inserido com sucesso!'
+                    }, status=201)
         except AttributeError:
             return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
         except ValueError:
-            return JsonResponse({"erro": "Valor inválido para coeficientes."}, status=400)
+            return JsonResponse({"erro": "Valor inválido."}, status=400)
         
     elif request.method == "PUT":
-
         try:
-            # Carregar dados do corpo da requisição
-            data = json.loads(request.body)
-
-            # Obter o ID do transportador
-            id = data.get('id').strip()
-        
+            data = json.loads(request.body)                             # Carregar dados do corpo da requisição
+            id = data.get('id')                                         # Obter o ID do transportador
             t = Transportador.objects.filter(id=id).first()
-
             if not t:
                 return JsonResponse({"erro": "Transportador não encontrado."}, status=404)
-
-            t.nome = data.get('nome', t.nome).strip().capitalize()
-            t.local = data.get('local', t.local).strip().capitalize()
-            t.coefLuz = float(data.get('coefluz', t.coefLuz))
-            t.coefCO2 = float(data.get('coefco2', t.coefLuz))
-
-            t.save()
-
-            return JsonResponse({"mensagem": f'Transportador "{t.nome}" atualizado com sucesso'})
-
+            else:
+                t.nome = data.get('nome', t.nome).strip().capitalize()
+                t.local = data.get('local', t.local).strip().capitalize()
+                t.coefLuz = float(data.get('coefluz', t.coefLuz))
+                t.coefCO2 = float(data.get('coefco2', t.coefLuz))
+                t.save()
+                return JsonResponse({"mensagem": f'Transportador "{t.nome}" atualizado com sucesso'})
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
         except AttributeError:
             return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
         except ValueError:
-            return JsonResponse({"erro": "Valor inválido para coeficientes."}, status=400)
+            return JsonResponse({"erro": "Valor inválido."}, status=400)
         
     elif request.method == "DELETE":
-
         try:
             data = json.loads(request.body)
-
-            # Obter o ID do transportador
-            id = data.get('id').strip()
-
-            # Buscar o transportador com o ID
-            t = Transportador.objects.filter(id=id).first()
-
+            id = data.get('id')                                     # Obter o ID do transportador
+            t = Transportador.objects.filter(id=id).first()         # Buscar o transportador com o ID
             if not t:
                 return JsonResponse({"erro": "Transportador não encontrado."}, status=404)
-
-            t.delete()
-
-            return JsonResponse({"mensagem": f'Transportador com id {id} removido com sucesso.'})
-
+            else:
+                t.delete()
+                return JsonResponse({"mensagem": f'Transportador com id {id} removido com sucesso.'})
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
         except AttributeError:
             return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
+        except ValueError:
+            return JsonResponse({"erro": "Valor inválido."}, status=400)
 
 def impacto(request):
     # recebe 4 parametros sempre
