@@ -106,18 +106,64 @@ def listar(request):
 @csrf_exempt
 def produto(request):
     if request.method == "GET":
-        # search
-        return HttpResponse("OK")
+        nome=request.GET.get('nome', '').strip().lower()
+        categoria=request.GET.get('cat', '').strip()
+        id=request.GET.get('id', '').strip()
+        p=Produto.objects.all().filter(nome__icontains=nome, cat__icontains=categoria, id__icontains=id)
+        return JsonResponse({"produto":list(p.values())})
+    
     elif request.method == "POST":
-        # create
-        params=request.POST.get("nome").strip()
-        return HttpResponse(params)
+        try:
+            data = json.loads(request.body)
+
+            nome=data.get('nome', '').strip().capitalize()
+            peso_carregamento=int(data.get('peso_carregamento', 0)) 
+            agua=int(data.get('agua', 0)) 
+            luz=int(data.get('luz', 0))
+            CO2=int(data.get('CO2', 0))
+            cat=data.get('cat', '').strip().capitalize()
+
+            if Produto.objects.filter(nome__iexact=nome, cat__iexact=cat).exists():
+                return JsonResponse({"erro": "Este produto já existe!"}, status=400)
+            
+            produto=Produto.objects.create(
+                nome=nome,
+                peso_carregamento=peso_carregamento,
+                agua=agua,
+                luz=luz,
+                CO2=CO2,
+                cat=cat
+            )
+               
+            return JsonResponse({
+                "produto": produto.nome, 
+                "mensagem": f'Produto "{produto.nome}" inserido com sucesso!'
+                }, status=201)
+    
+        except json.JSONDecodeError:
+            return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
     elif request.method == "PUT":
         # alterações
         return HttpResponse("put")
     elif request.method == "DELETE":
-        # remover
-        return HttpResponse("del")
+        try:
+            data = json.loads(request.body)
+
+        # Obter o ID do produto
+            id = data.get('id')
+
+        # Buscar produto com base no id
+            produto = Produto.objects.filter(id=id).first()
+
+            if not produto:
+                return JsonResponse({"erro": "Produto não encontrado."}, status=404)
+
+            produto.delete()
+
+            return JsonResponse({"mensagem": "Produto removido com sucesso!"})
+
+        except json.JSONDecodeError:
+            return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
 
 @csrf_exempt
 def fornecedor(request):                                                                   
@@ -129,20 +175,19 @@ def fornecedor(request):
 
         f=Fornecedor.objects.all().filter(nome__icontains=nome, local__icontains=local, cat__icontains=categoria, id__icontains=id)
         return JsonResponse({"fornecedor":list(f.values())})
-
     elif request.method == "POST":
         try:
             data = json.loads(request.body)
 
-            nome=data.get('nome', '').strip().lower()
-            coefAgua=data.get('coefAgua', '').strip().lower()
-            coefLuz=data.get('coefLuz', '').strip().lower()
-            coefCO2=data.get('coefCO2', '').strip().lower()
-            local=data.get('local', '').strip().lower()
-            cat=data.get('cat', '').strip().lower()
+            nome=data.get('nome', '').strip().capitalize()
+            coefAgua=float(data.get('coefAgua', 0))
+            coefLuz=float(data.get('coefLuz', 0))
+            coefCO2=float(data.get('coefCO2', 0))
+            local=data.get('local', '').strip().capitalize()
+            cat=data.get('cat', '').strip().capitalize()
 
             if Fornecedor.objects.filter(nome__iexact=nome, local__iexact=local, cat__iexact=cat).exists():
-                return JsonResponse({"erro": "Fornecedor já existe."}, status=400)
+                return JsonResponse({"erro": "Fornecedor já existe na Base de Dados!."}, status=400)
             
             fornecedor=Fornecedor.objects.create(
                 nome=nome,
@@ -153,7 +198,10 @@ def fornecedor(request):
                 cat=cat
             )
                
-            return JsonResponse({"nome":Fornecedor.nome}, status=201)
+            return JsonResponse({
+                "fornecedor": fornecedor.nome, 
+                "mensagem": f'Fornecedor "{fornecedor.nome}" inserido com sucesso!'
+                }, status=201)
     
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
@@ -170,12 +218,12 @@ def fornecedor(request):
             if not fornecedor:
                 return JsonResponse({"erro": "Fornecedor não encontrado."}, status=404)
 
-            fornecedor.nome = data.get('nome', fornecedor.nome).strip().lower()
-            fornecedor.coefAgua = data.get('coefAgua', fornecedor.coefAgua).strip().lower()
-            fornecedor.coefLuz = data.get('coefLuz', fornecedor.coefLuz).strip().lower()
-            fornecedor.coefCO2 = data.get('coefCO2', fornecedor.coefCO2).strip().lower()
-            fornecedor.local = data.get('local', fornecedor.local).strip().lower()
-            fornecedor.cat = data.get('cat', fornecedor.cat).strip().lower()
+            fornecedor.nome = data.get('nome', fornecedor.nome).strip()
+            fornecedor.coefAgua = float(data.get('coefAgua', fornecedor.coefAgua))
+            fornecedor.coefLuz = float(data.get('coefLuz', fornecedor.coefLuz))
+            fornecedor.coefCO2 = float(data.get('coefCO2', fornecedor.coefCO2))
+            fornecedor.local = data.get('local', fornecedor.local)
+            fornecedor.cat = data.get('cat', fornecedor.cat).strip()
 
             fornecedor.save()
 
@@ -183,6 +231,8 @@ def fornecedor(request):
 
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
+        except ValueError:
+            return JsonResponse({"erro": "Valor inválido para coeficientes."}, status=400)
     elif request.method == "DELETE":
         try:
             data = json.loads(request.body)
