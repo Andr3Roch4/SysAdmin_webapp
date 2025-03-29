@@ -441,10 +441,19 @@ def transportador(request):
             return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
 
 def impacto(request):
+    # recebe 4 parametros sempre
+    # calcula o impacto 
+    # retorna json com informaçao da cadeia escolhida e luz+co2+agua gastos e score do impacto
     pass
 
 def ideal(request):
+    # recebe 2 parametros sempre
+    # calcula cadeia mais eficiente
+    # retorna json com informaçao da cadeia mais eficiente e luz+co2+agua gastos e score do impacto
     pass
+
+
+
 
 def load(request):
     prod="csv/produto.csv"
