@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from .models import Produto, Distribuidor, Fornecedor, Transportador
+from .helpers import calcular_recursos, impact_score, cadeia_menor_impact
 from django.core import serializers
 import csv
 from django.views.decorators.csrf import csrf_exempt
