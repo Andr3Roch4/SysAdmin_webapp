@@ -144,7 +144,7 @@ def produto(request):
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
         
-    elif request.method == "PUT":
+    elif request.method == "PUT":       
         try:
             # Carregar dados do corpo da requisição
             data = json.loads(request.body)
@@ -158,10 +158,10 @@ def produto(request):
                 return JsonResponse({"erro": "Fornecedor não encontrado."}, status=404)
 
             produto.nome = data.get('nome', produto.nome).strip().capitalize()
-            produto.peso_carregamento = int(data.get('peso_carregamento', produto.peso_carregamento).strip())
-            produto.agua = int(data.get('agua', produto.agua).strip())
-            produto.luz = int(data.get('luz', produto.luz).strip())
-            produto.CO2 = int(data.get('CO2', produto.CO2).strip())
+            produto.peso_carregamento = int(data.get('peso_carregamento', produto.peso_carregamento))
+            produto.agua = int(data.get('agua', produto.agua))
+            produto.luz = int(data.get('luz', produto.luz))
+            produto.CO2 = int(data.get('CO2', produto.CO2))
             produto.cat = data.get('cat', produto.cat).strip().capitalize()
 
             produto.save()
@@ -174,6 +174,8 @@ def produto(request):
             return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
         except ValueError:
             return JsonResponse({"erro": "Valor inválido para coeficientes."}, status=400)
+
+
     elif request.method == "DELETE":
         try:
             data = json.loads(request.body)
