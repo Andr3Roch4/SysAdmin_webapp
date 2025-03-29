@@ -141,8 +141,8 @@ def produto(request):
         
     elif request.method == "PUT":       
         try:
-            data = json.loads(request.body)         # Carregar dados do corpo da requisição
-            id = data.get('id')                     # Obter o ID
+            data = json.loads(request.body)                             # Carregar dados do corpo da requisição
+            id = data.get('id')                                         # Obter o ID
             produto = Produto.objects.filter(id=id).first()
             if not produto:
                 return JsonResponse({"erro": "Produto não encontrado."}, status=404)
@@ -165,8 +165,8 @@ def produto(request):
     elif request.method == "DELETE":
         try:
             data = json.loads(request.body)
-            id = data.get('id')                                 # Obter o ID do produto
-            produto = Produto.objects.filter(id=id).first()     # Buscar produto com base no id
+            id = data.get('id')                                         # Obter o ID do produto
+            produto = Produto.objects.filter(id=id).first()             # Buscar produto com base no id
             if not produto:
                 return JsonResponse({"erro": "Produto não encontrado."}, status=404)
             else:
@@ -218,8 +218,8 @@ def fornecedor(request):
         
     elif request.method == "PUT":
         try:
-            data = json.loads(request.body)                     # Carregar dados do corpo da requisição
-            id = data.get('id')                                 # Obter o ID do fornecedor
+            data = json.loads(request.body)                             # Carregar dados do corpo da requisição
+            id = data.get('id')                                         # Obter o ID do fornecedor
             fornecedor = Fornecedor.objects.filter(id=id).first()
             if not fornecedor:
                 return JsonResponse({"erro": "Fornecedor não encontrado."}, status=404)
@@ -242,8 +242,8 @@ def fornecedor(request):
     elif request.method == "DELETE":
         try:
             data = json.loads(request.body)
-            id = data.get('id')                                     # Obter o ID do fornecedor
-            fornecedor = Fornecedor.objects.filter(id=id).first()   # Buscar o fornecedor com o ID
+            id = data.get('id')                                             # Obter o ID do fornecedor
+            fornecedor = Fornecedor.objects.filter(id=id).first()           # Buscar o fornecedor com o ID
             if not fornecedor:
                 return JsonResponse({"erro": "Fornecedor não encontrado."}, status=404)
             else:
@@ -284,8 +284,8 @@ def distribuidor(request):
         
     elif request.method == "PUT":
         try:
-            data = json.loads(request.body)                         # Carregar dados do corpo da requisição
-            id = data.get('id')                                     # Obter o ID do distribuidor
+            data = json.loads(request.body)                                 # Carregar dados do corpo da requisição
+            id = data.get('id')                                             # Obter o ID do distribuidor
             d = Distribuidor.objects.filter(id=id).first()
             if not d:
                 return JsonResponse({"erro": "Distribuidor não encontrado."}, status=404)
@@ -305,8 +305,8 @@ def distribuidor(request):
     elif request.method == "DELETE":
         try:
             data = json.loads(request.body)
-            id = data.get('id')                                     # Obter o ID do distribuidor
-            d = Distribuidor.objects.filter(id=id).first()          # Buscar o distribuidor com o ID
+            id = data.get('id')                                             # Obter o ID do distribuidor
+            d = Distribuidor.objects.filter(id=id).first()                  # Buscar o distribuidor com o ID
             if not d:
                 return JsonResponse({"erro": "Distribuidor não encontrado."}, status=404)
             else:
@@ -370,8 +370,8 @@ def transportador(request):
     elif request.method == "DELETE":
         try:
             data = json.loads(request.body)
-            id = data.get('id')                                     # Obter o ID do transportador
-            t = Transportador.objects.filter(id=id).first()         # Buscar o transportador com o ID
+            id = data.get('id')                                         # Obter o ID do transportador
+            t = Transportador.objects.filter(id=id).first()             # Buscar o transportador com o ID
             if not t:
                 return JsonResponse({"erro": "Transportador não encontrado."}, status=404)
             else:
@@ -388,6 +388,17 @@ def impacto(request):
     # recebe 4 parametros sempre
     # calcula o impacto 
     # retorna json com informaçao da cadeia escolhida e luz+co2+agua gastos e score do impacto
+    # exemplo do return json
+    json_return={
+        "produto":f"{p.nome}",
+        "fornecedor":f"{f.nome}",
+        "distribuidor":f"{d.nome}",
+        "transportador":f"{t.nome}",
+        "luz":10,
+        "co2":10,
+        "agua":10,
+        "score":5
+    }
     pass
 
 def ideal(request):
