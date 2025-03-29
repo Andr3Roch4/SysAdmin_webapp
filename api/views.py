@@ -219,7 +219,7 @@ def fornecedor(request):
             data = json.loads(request.body)
 
             # Obter o ID do fornecedor
-            id = data.get('id')
+            id = data.get('id').strip()
         
             fornecedor = Fornecedor.objects.filter(id=id).first()
 
@@ -239,6 +239,8 @@ def fornecedor(request):
 
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
+        except AttributeError:
+            return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
         except ValueError:
             return JsonResponse({"erro": "Valor inválido para coeficientes."}, status=400)
         
@@ -247,7 +249,7 @@ def fornecedor(request):
             data = json.loads(request.body)
 
             # Obter o ID do fornecedor
-            id = data.get('id')
+            id = data.get('id').strip()
 
             # Buscar o fornecedor com o ID
             fornecedor = Fornecedor.objects.filter(id=id).first()
@@ -261,6 +263,8 @@ def fornecedor(request):
 
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
+        except AttributeError:
+            return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
 
 
 @csrf_exempt
