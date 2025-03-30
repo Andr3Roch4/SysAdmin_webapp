@@ -9,101 +9,6 @@ import json
 
 # Create your views here.
 
-def listar(request):
-    parametro = request.GET.get('nome', '').strip()                     # Qualquer nome a pesquisar
-    category = request.GET.get('tipo', '').strip().lower()              # Tipo da categoria  (produto, fornecedor, etc.)
-    local = request.GET.get('loc', '').strip()                          # local nos distribuidor, fornecedor e transportador
-    categoria = request.GET.get('cat', '').strip()                      # Categoria do produto, em produto e fornecedor
-
-
-    print("Parametros recebidos:")
-    print(f"parametro: {parametro}")
-    print(f"category: {category}")
-    print(f"local: {local}")
-    print(f"categoria: {categoria}")
-    # Dicionário com os modelos disponíveis
-    modelos = {
-        "produto": Produto,
-        "distribuidor": Distribuidor,
-        "fornecedor": Fornecedor,
-        "transportador": Transportador
-    }
-
-    # Modelos que possuem o campo `local`
-    modelos_com_local = {"distribuidor", "fornecedor", "transportador"}
-
-    data = {}
-
-    # Se uma tipo for passado, filtra apenas nele **mas continua a buscar as outras**
-    for key, model in modelos.items():
-        print(f"Processando modelo: {key}")
-        if category and key != category:  # Se `category` for passada, ignora os outros modelos
-            continue
-        if categoria and key not in ['produto', 'fornecedor']:
-            print(f"Ignorando modelo {key} porque categoria foi informada.")
-            continue  
-        queryset = model.objects.all()
-        
-        if local and key not in modelos_com_local:
-            continue
-        
-        # Filtra pelo nome, se fornecido
-        if parametro:
-            queryset = queryset.filter(nome__icontains=parametro)
-
-        # Filtra pelo local, mas apenas se o modelo tiver esse campo
-        if local and key in modelos_com_local:
-            if hasattr(model, 'local'):  # Verifica se o modelo tem o campo `local`
-                queryset = queryset.filter(local__icontains=local)
-                print(f"Filtro de local aplicado: {local} para {key}")
-        # Filtra pela categoria, mas apenas para Produto e Fornecedor
-        if key == "fornecedor" and categoria:
-            queryset = queryset.filter(cat__icontains=categoria)
-        elif key == "produto" and categoria:
-            queryset = queryset.filter(cat__icontains=categoria)
-
-        if categoria and hasattr(model, 'cat'):
-            queryset = queryset.filter(cat__icontains=categoria)
-            print(f"Filtro de categoria aplicado: {categoria}")
-   
-        # Adiciona o resultado no dicionário
-        data[key] = list(queryset.values())  
-
-    # Verifica se a categoria ou localização não retornaram resultados e adiciona uma chave indicando isso
-    for key, model in modelos.items():
-        if not data.get(key):
-            data[key + "_no_results"] = f"Sem {key} encontrado para o filtro usado"
-
-    return JsonResponse(data, safe=False)
-
-    #param = request.GET.get('q', '').strip()  # Obtém o parâmetro 'q' da URL
-    #queryset = Produto.objects.all()
-    #if param:  # Se 'q' foi passado na URL, aplica o filtro
-        #queryset = queryset.filter(nome__icontains=param)
-    #data = list(queryset.values())  
-    #return JsonResponse(data, safe=False)
-    #p=Produto.objects.all()                                         # Variavel data com todos os Produtos
-    #d=Distribuidor.objects.all()                                    # Variavel data com todos os Distribuidores
-    #f=Fornecedor.objects.all()                                      # Variavel data com todos os Fornecedores
-    #t=Transportador.objects.all()
-
-    #models = {
-        #"produto": Produto,
-        #"distribuidor": Distribuidor,
-        #"fornecedor": Fornecedor,
-        #"transportador": Transportador,
-    #}
-    #data = {
-        #"produtos": list(p),
-        #"distribuidores": list(d),
-        #"fornecedores": list(f),
-        #"transportadores": list(t),
-    #}
-                                                                    # Variavel data com todos os Transportadores
-    #data = list(p) + list(d) + list(f) + list(t)                                      
-    #json_data=serializers.serialize("json", data)                   # Transforma a data em json
-    #return HttpResponse(json_data,# content_type='application/json') # Como já temos a data em json, temos de fazer Httpresponse e não JsonResponse
-
 @csrf_exempt
 def produto(request):
 
@@ -387,20 +292,24 @@ def transportador(request):
 
 def impacto(request):
     # recebe 4 parametros sempre
+    p=request.POST.get("produto")
+    d=request.POST.get("distribuidor")
+    f=request.POST.get("fornecedor")
+    t=request.POST.get("transportador")
     # calcula o impacto 
+    agua_cadeia, luz_cadeia, co2_cadeia=calcular_recursos(p,d,f,t)
+    score=impact_score(agua_cadeia, luz_cadeia, co2_cadeia)
     # retorna json com informaçao da cadeia escolhida e luz+co2+agua gastos e score do impacto
-    # exemplo do return json
     json_return={
         "produto":f"{p.nome}",
-        "fornecedor":f"{f.nome}",
-        "distribuidor":f"{d.nome}",
-        "transportador":f"{t.nome}",
-        "luz":10,
-        "co2":10,
-        "agua":10,
-        "score":5
+        "fornecedor":f"{f.nome}, {f.local}",
+        "distribuidor":f"{d.nome}, {d.local}",
+        "transportador":f"{t.nome}, {t.local}",
+        f"luz kWh por kg de {p.nome}":f"{luz_cadeia:.2f}",
+        f"co2 kg CO2 por kg de {p.nome}":f"{co2_cadeia:.2f}",
+        f"agua litros por kg de {p.nome}":f"{agua_cadeia:.2f}",
+        "score":f"{score:.2f}"
     }
-    pass
 
 def ideal(request):
     # recebe 2 parametros sempre
