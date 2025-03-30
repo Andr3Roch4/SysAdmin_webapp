@@ -290,6 +290,7 @@ def transportador(request):
         except ValueError:
             return JsonResponse({"erro": "Valor inválido."}, status=400)
 
+@csrf_exempt
 def impacto(request):
     if request.method == "POST":
         try:
@@ -322,6 +323,7 @@ def impacto(request):
         except ValueError:
             return JsonResponse({"erro": "Valor inválido."}, status=400)
 
+@csrf_exempt
 def ideal(request):
     if request.method == "POST":
         try:

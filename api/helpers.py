@@ -10,13 +10,21 @@ def calcular_recursos(produto, distribuidor, fornecedor, transportador):
     luz_transportador=0.03      # kWh/km em media dos camioes para refrigeração
     tempoarmazenamento=random.randrange(1,30)
 
-    distribuidor.coefs(luz_distribuidor, tempoarmazenamento)
-    fornecedor.coefs(produto.luz, produto.CO2, produto.agua)
     distancia_provisoria=float(distancia(fornecedor.local, distribuidor.local))+float(distancia(transportador.local,fornecedor.local))
-    transportador.coefs(CO2_transportador, luz_transportador, distancia_provisoria, produto.peso_carregamento)
-    agua_cadeia=fornecedor.aguaF
-    luz_cadeia=distribuidor.luz+fornecedor.luzF+transportador.luz
-    co2_cadeia=fornecedor.CO2F+transportador.CO2
+    if distancia_provisoria < 50:
+        distancia_provisoria=50
+    #distribuidor.coefs(luz_distribuidor, tempoarmazenamento)
+    #fornecedor.coefs(produto.luz, produto.CO2, produto.agua)
+    #transportador.coefs(CO2_transportador, luz_transportador, distancia_provisoria, produto.peso_carregamento)
+    luz_dist=distribuidor.coefLuz*luz_distribuidor*tempoarmazenamento
+    luz_forn=fornecedor.coefLuz*produto.luz
+    agua_forn=fornecedor.coefAgua*produto.agua
+    co2_forn=fornecedor.coefCO2*produto.CO2
+    co2_trans=((transportador.coefCO2*CO2_transportador)*distancia_provisoria)/produto.peso_carregamento
+    luz_trans=((transportador.coefLuz*luz_transportador)*distancia_provisoria)/produto.peso_carregamento
+    agua_cadeia=agua_forn
+    luz_cadeia=luz_dist+luz_forn+luz_trans
+    co2_cadeia=co2_forn+co2_trans
 
     return agua_cadeia, luz_cadeia, co2_cadeia
 
