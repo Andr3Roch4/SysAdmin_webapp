@@ -318,7 +318,7 @@ def impacto(request):
                 "score":f"{score:.2f}"
             }
             return JsonResponse(json_return)
-        #except AttributeError:
+        except AttributeError:
             return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
         except ValueError:
             return JsonResponse({"erro": "Valor inválido."}, status=400)
