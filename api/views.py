@@ -311,6 +311,8 @@ def impacto(request):
         "score":f"{score:.2f}"
     }
 
+    return JsonResponse(json_return)
+
 def ideal(request):
     # recebe 2 parametros sempre
     # calcula cadeia mais eficiente
