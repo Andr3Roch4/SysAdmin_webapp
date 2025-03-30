@@ -10,6 +10,8 @@ def calcular_recursos(produto, distribuidor, fornecedor, transportador):
     luz_transportador=0.03      # kWh/km em media dos camioes para refrigeração
     tempoarmazenamento=random.randrange(1,30)
 
+    if produto.cat not in fornecedor.cat:
+        return JsonResponse({"erro":"Não existe fornecedor para o produto selecionado."}, status=404)
     distancia_provisoria=float(distancia(fornecedor.local, distribuidor.local))+float(distancia(transportador.local,fornecedor.local))
     if distancia_provisoria < 50:
         distancia_provisoria=50
