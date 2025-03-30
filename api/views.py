@@ -291,35 +291,63 @@ def transportador(request):
             return JsonResponse({"erro": "Valor inválido."}, status=400)
 
 def impacto(request):
-    # recebe 4 parametros sempre
-    p=request.POST.get("produto")
-    d=request.POST.get("distribuidor")
-    f=request.POST.get("fornecedor")
-    t=request.POST.get("transportador")
-    # calcula o impacto 
-    agua_cadeia, luz_cadeia, co2_cadeia=calcular_recursos(p,d,f,t)
-    score=impact_score(agua_cadeia, luz_cadeia, co2_cadeia)
-    # retorna json com informaçao da cadeia escolhida e luz+co2+agua gastos e score do impacto
-    json_return={
-        "produto":f"{p.nome}",
-        "fornecedor":f"{f.nome}, {f.local}",
-        "distribuidor":f"{d.nome}, {d.local}",
-        "transportador":f"{t.nome}, {t.local}",
-        f"luz kWh por kg de {p.nome}":f"{luz_cadeia:.2f}",
-        f"co2 kg CO2 por kg de {p.nome}":f"{co2_cadeia:.2f}",
-        f"agua litros por kg de {p.nome}":f"{agua_cadeia:.2f}",
-        "score":f"{score:.2f}"
-    }
-
-    return JsonResponse(json_return)
+    if request.method == "POST":
+        try:
+            # recebe 4 parametros sempre
+            id_p=request.POST.get("produto")
+            id_d=request.POST.get("distribuidor")
+            id_f=request.POST.get("fornecedor")
+            id_t=request.POST.get("transportador")
+            p=Produto.objects.filter(id=id_p)
+            d=Distribuidor.objects.filter(id=id_d)
+            f=Fornecedor.objects.filter(id=id_f)
+            t=Transportador.objects.filter(id=id_t)
+            # calcula o impacto 
+            agua_cadeia, luz_cadeia, co2_cadeia=calcular_recursos(p,d,f,t)
+            score=impact_score(agua_cadeia, luz_cadeia, co2_cadeia)
+            # retorna json com informaçao da cadeia escolhida e luz+co2+agua gastos e score do impacto
+            json_return={
+                "produto":f"{p.nome}",
+                "fornecedor":f"{f.nome}, {f.local}",
+                "distribuidor":f"{d.nome}, {d.local}",
+                "transportador":f"{t.nome}, {t.local}",
+                f"luz kWh por kg de {p.nome}":f"{luz_cadeia:.2f}",
+                f"co2 kg CO2 por kg de {p.nome}":f"{co2_cadeia:.2f}",
+                f"agua litros por kg de {p.nome}":f"{agua_cadeia:.2f}",
+                "score":f"{score:.2f}"
+            }
+            return JsonResponse(json_return)
+        except AttributeError:
+            return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
+        except ValueError:
+            return JsonResponse({"erro": "Valor inválido."}, status=400)
 
 def ideal(request):
-    # recebe 2 parametros sempre
-    # calcula cadeia mais eficiente
-    # retorna json com informaçao da cadeia mais eficiente e luz+co2+agua gastos e score do impacto
-    pass
-
-
+    if request.method == "POST":
+        try:
+            # recebe 2 parametros sempre
+            id_p=request.POST.get("produto")
+            id_d=request.POST.get("distribuidor")
+            p=Produto.objects.filter(id=id_p)
+            d=Distribuidor.objects.filter(id=id_d)
+            # calcula cadeia mais eficiente
+            dict_escolhas=cadeia_menor_impact(p, d)
+            # retorna json com informaçao da cadeia mais eficiente e luz+co2+agua gastos e score do impacto
+            json_return={
+                "produto":f"{p.nome}",
+                "fornecedor":f"{dict_escolhas["fornecedor"].nome}, {dict_escolhas["fornecedor"].local}",
+                "distribuidor":f"{d.nome}, {d.local}",
+                "transportador":f"{dict_escolhas["transportador"].nome}, {dict_escolhas["transportador"].local}",
+                f"luz kWh por kg de {p.nome}":f"{dict_escolhas["luz_cadeia"]:.2f}",
+                f"co2 kg CO2 por kg de {p.nome}":f"{dict_escolhas["co2_cadeia"]:.2f}",
+                f"agua litros por kg de {p.nome}":f"{dict_escolhas["agua_cadeia"]:.2f}",
+                "score":f"{dict_escolhas["score"]:.2f}"
+            }
+            return JsonResponse(json_return)
+        except AttributeError:
+            return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
+        except ValueError:
+            return JsonResponse({"erro": "Valor inválido."}, status=400)
 
 
 def load(request):

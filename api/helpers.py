@@ -30,24 +30,25 @@ def impact_score(aguaCadeia, luzCadeia, CO2Cadeia):           # O score varia de
     return score
 
 
-def cadeia_menor_impact(dict_classes, produto, distribuidor, tempoarmazenamento):
+def cadeia_menor_impact(produto, distribuidor):
     
     # Listar possiveis fornecedores
     lista_fornecedores_possiveis=[]
-    for i in dict_classes["fornecedor"]:
+    forn_all=Fornecedor.objects.all()
+    trans_all=Transportador.objects.all()
+    for i in forn_all:
         if produto.cat in i.cat:
             lista_fornecedores_possiveis.append(i)
     
     # Calcular a cadeia ideal com menor impacto
     impact=10000
-    fornecedor_escolhido=dict_classes["fornecedor"][0]
-    transportador_escolhido=dict_classes["transportador"][0]
+    fornecedor_escolhido=Fornecedor.objects.all().first()
+    transportador_escolhido=Transportador.objects.all().first()
     if not lista_fornecedores_possiveis:
-        print("Não existe fornecedor para o produto selecionado.")
-        return
+        return JsonResponse({"erro":"Não existe fornecedor para o produto selecionado."}, status=404)
     for f in lista_fornecedores_possiveis:
-        for t in dict_classes["transportador"]:
-            agua_cadeia_provisorio, luz_cadeia_provisorio, co2_cadeia_provisorio=calcular_recursos(produto, distribuidor, f, t, tempoarmazenamento)
+        for t in trans_all:
+            agua_cadeia_provisorio, luz_cadeia_provisorio, co2_cadeia_provisorio=calcular_recursos(produto, distribuidor, f, t)
             impact_provisorio=impact_score(agua_cadeia_provisorio, luz_cadeia_provisorio, co2_cadeia_provisorio)
             if impact > impact_provisorio:
                 # Variaveis com info da cadeia escolhida e da que ficou em segundo lugar
@@ -61,7 +62,7 @@ def cadeia_menor_impact(dict_classes, produto, distribuidor, tempoarmazenamento)
                 luz_cadeia=luz_cadeia_provisorio
                 co2_cadeia=co2_cadeia_provisorio
 
-    return {"fornecedor":fornecedor_escolhido, "transportador":transportador_escolhido, "agua_cadeia":agua_cadeia, "luz_cadeia":luz_cadeia, "co2_cadeia":co2_cadeia}
+    return {"fornecedor":fornecedor_escolhido, "transportador":transportador_escolhido, "agua_cadeia":agua_cadeia, "luz_cadeia":luz_cadeia, "co2_cadeia":co2_cadeia, "score":impact}
 
 def distancia(citie1, citie2):
     # Dicionario com latitudes e longitudes
