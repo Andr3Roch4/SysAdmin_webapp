@@ -179,7 +179,7 @@ def distribuidor(request):
             if Distribuidor.objects.filter(nome=nome).exists():
                 return JsonResponse({"erro": "Distribuidor já existe na Base de Dados!."}, status=400)
             else:
-                new_d=Distribuidor.objects.create(nome=nome,local=local,coefluz=coefluz)
+                new_d=Distribuidor.objects.create(nome=nome,local=local,coefLuz=coefluz)
                 return JsonResponse({
                     "mensagem": f'Distribuidor "{new_d.nome}" inserido com sucesso!'
                     }, status=201)
@@ -243,7 +243,7 @@ def transportador(request):
             if Transportador.objects.filter(nome=nome).exists():
                 return JsonResponse({"erro": "Transportador já existe na Base de Dados!."}, status=400)
             else:
-                new_t=Transportador.objects.create(nome=nome,local=local,coefluz=coefluz,coefCO2=coefCO2)
+                new_t=Transportador.objects.create(nome=nome,local=local,coefLuz=coefluz,coefCO2=coefCO2)
                 return JsonResponse({
                     "mensagem": f'Transportador "{new_t.nome}" inserido com sucesso!'
                     }, status=201)
