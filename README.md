@@ -27,3 +27,9 @@ python manage.py startapp cadeialogistica
 ##### Incluir novos caminhos (urls) da cadeialogistica na webapp
 
 ##### Incluir app cadeialogistica nas settings.py -> installed_apps
+
+##### Incluir hostname nos allowed_hosts
+
+```
+az webapp up --runtime PYTHON:3.12 --name clogistica --sku B1 --logs --resource-group RG-UPSKILL-SysAdmin
+```
