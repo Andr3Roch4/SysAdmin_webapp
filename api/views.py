@@ -303,6 +303,8 @@ def impacto(request):
             d=Distribuidor.objects.get(id=id_d)
             f=Fornecedor.objects.get(id=id_f)
             t=Transportador.objects.get(id=id_t)
+            if p.cat not in f.cat:
+                return JsonResponse({"erro":"Fornecedor não produz o produto selecionado."}, status=404)
             # calcula o impacto 
             agua_cadeia, luz_cadeia, co2_cadeia=calcular_recursos(p,d,f,t)
             score=impact_score(agua_cadeia, luz_cadeia, co2_cadeia)
@@ -322,6 +324,14 @@ def impacto(request):
             return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
         except ValueError:
             return JsonResponse({"erro": "Valor inválido."}, status=400)
+        except Produto.DoesNotExist:
+            return JsonResponse({"erro": "Falta parâmetro produto."}, status=400)
+        except Fornecedor.DoesNotExist:
+            return JsonResponse({"erro": "Falta parâmetro fornecedor."}, status=400)
+        except Distribuidor.DoesNotExist:
+            return JsonResponse({"erro": "Falta parâmetro distribuidor."}, status=400)
+        except Transportador.DoesNotExist:
+            return JsonResponse({"erro": "Falta parâmetro transportador."}, status=400)
 
 @csrf_exempt
 def ideal(request):
@@ -356,6 +366,14 @@ def ideal(request):
             return JsonResponse({"erro": "Faltam parâmetros."}, status=400)
         except ValueError:
             return JsonResponse({"erro": "Valor inválido."}, status=400)
+        except Produto.DoesNotExist:
+            return JsonResponse({"erro": "Falta parâmetro produto."}, status=400)
+        except Fornecedor.DoesNotExist:
+            return JsonResponse({"erro": "Falta parâmetro fornecedor."}, status=400)
+        except Distribuidor.DoesNotExist:
+            return JsonResponse({"erro": "Falta parâmetro distribuidor."}, status=400)
+        except Transportador.DoesNotExist:
+            return JsonResponse({"erro": "Falta parâmetro transportador."}, status=400)
 
 
 def load(request):
