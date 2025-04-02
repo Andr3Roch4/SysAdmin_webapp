@@ -35,3 +35,24 @@ az webapp up --runtime PYTHON:3.12 --name clogistica --sku B1 --logs --resource-
 ```
 
 ##### Necessário usar cifs-utils para montar a base de dados que esta no Azure Files
+
+```
+sudo apt install cifs-utils
+```
+
+```
+sudo mkdir db
+```
+
+```
+sudo mount -t cifs //formando30.file.core.windows.net/formando30/db/ /home/upskill/webapp/db -o vers=3.0,username=formando30,password=7jzpvEzxYX/DxCdSSbguaT4U2ex/7j9IQViKMqrTJh09bQOXg
+FJQ+St6TyDQP+EynPwe8yl640Q7+ASt+LI+gQ==,dir_mode=0777,file_mode=0777,serverino
+```
+
+```
+//formando30.file.core.windows.net/formando30/db/ /home/upskill/webapp/db cifs credentials=/etc/azurefiles.cred,vers=3.0,serverino,dir_mode=0777,file_mode=0777 0 0
+```
+
+```
+sudo nano /etc/azurefiles.cred
+```
