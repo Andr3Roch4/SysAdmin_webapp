@@ -54,5 +54,13 @@ FJQ+St6TyDQP+EynPwe8yl640Q7+ASt+LI+gQ==,dir_mode=0777,file_mode=0777,serverino,n
 ```
 
 ```
+systemctl daemon-reload
+```
+
+```
+sudo mount -o remount /home/upskill/webapp/db
+```
+
+```
 sudo nano /etc/azurefiles.cred
 ```
