@@ -33,3 +33,5 @@ python manage.py startapp cadeialogistica
 ```
 az webapp up --runtime PYTHON:3.12 --name clogistica --sku B1 --logs --resource-group RG-UPSKILL-SysAdmin
 ```
+
+##### Necessário usar cifs-utils para montar a base de dados que esta no Azure Files
