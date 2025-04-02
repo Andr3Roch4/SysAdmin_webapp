@@ -1,19 +1,80 @@
-# WebApp
+# M6 - Projeto 1 - WebApp
 
-## Histórico de comandos usados
+(introdução)
+
+## Infraestrutura necessária
+1- Possuir VNET
+
+2- Possuir VM:
+
+    vCPU: 1
+    RAM: 1GB
+    SO: Ubuntu
+    Disco: Tamanho mínimo para o SO(32GB)
+
+
+## Guia de Implementação
+
+1- Aceder à VM por ssh
+
+2- Atualizar lista de pacotes apt
+``` 
+sudo apt update
+```
+
+3- Instalar o gestor de pactores ``pip``
+``` 
+sudo apt install pip
+```
+
+4- Clonar o repositório com a API REST
+``` 
+git clone https://gitlab.com/lezz-git-it/webapp.git
+```
+
+5- Navegar até à pasta ``webapp``
+
+6- Criar um ambiente virtual e instalar os requisitos no mesmo
 
 ```
 python3 -m venv .venv
 source .venv/bin/activate
-pip install django
+pip install -r requirements
 ```
 
+7- Criar o ficheiro com as credenciais da conta de armazenamento onde se encontra o ficheiro da base de dados
+```
+sudo nano /etc/azurefiles.cred
+```
+```
+username= [nome da conta de armazenamento]
+password= [chave da conta de armazenamento]
+```
+8- Criar a pasta ``db``
+
+9- Para que a pasta da base de dados seja montada na pasta da webapp, a cada boot, editar o ficheiro ``/etc/fstab``, acrescentando a seguinte linha no final:
+```
+//formando30.file.core.windows.net/formando30/db /home/upskill/webapp/db cifs credentials=/etc/azurefiles.cred,vers=3.0,serverino,dir_mode=0777,file_mode=0777,nobrl 0 0
+```
+(nobrl - Disables byte-range locking (required for SQLite over SMB))
+
+10- Para aplicar as alterações sem ter de reiniciar a VM:
+```
+systemctl daemon-reload
+```
+```
+sudo mount -a
+```
+
+11- Correr o servidor
+```
+python manage.py runserver 0.0.0.0:8000
+```
+
+
+## Histórico de comandos usados
 ```
 django-admin startproject webapp .
-```
-
-```
-python manage.py runserver
 ```
 
 ```
@@ -40,27 +101,12 @@ az webapp up --runtime PYTHON:3.12 --name clogistica --sku B1 --logs --resource-
 sudo apt install cifs-utils
 ```
 
-```
-sudo mkdir db
-```
 
-```
-sudo mount -t cifs //formando30.file.core.windows.net/formando30/db/ /home/upskill/webapp/db -o vers=3.0,username=formando30,password=7jzpvEzxYX/DxCdSSbguaT4U2ex/7j9IQViKMqrTJh09bQOXg
-FJQ+St6TyDQP+EynPwe8yl640Q7+ASt+LI+gQ==,dir_mode=0777,file_mode=0777,serverino,nobrl
-```
 
-```
-//formando30.file.core.windows.net/formando30/db /home/upskill/webapp/db cifs credentials=/etc/azurefiles.cred,vers=3.0,serverino,dir_mode=0777,file_mode=0777,nobrl 0 0
-```
 
-```
-systemctl daemon-reload
-```
 
-```
-sudo mount -o remount /home/upskill/webapp/db
-```
 
-```
-sudo nano /etc/azurefiles.cred
-```
+## Contributors:
+- André Rocha
+- Pedro Pires
+- Waltenberg Dantas
