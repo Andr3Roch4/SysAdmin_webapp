@@ -1,10 +1,12 @@
 # M6 - Projeto 1 - WebApp
 
-(introdução)
+Este projeto teve como objetivos: 1- Criação de uma API REST para a aplicação desenvolvida no primeiro projeto do módulo anterior e 2- Alojamento dessa API numa máquina virtual (VM) Azure. De seguida, apresenta-se um guia de como atingir o segundo objetivo, utilizando a API presente neste repositório, a qual foi desenvolvida com Django.
 
 ## Infraestrutura necessária
 
-2- Possuir VM, com os seguintes requisitos mínimos:
+1- Rede Virtual Azure (VNET)
+
+2- VM, com os seguintes requisitos mínimos:
 
     vCPU: 1
     RAM: 1GB
