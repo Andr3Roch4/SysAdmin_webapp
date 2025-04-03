@@ -4,21 +4,36 @@
 
 ## Infraestrutura necessária
 
-1- VM:
+2- Possuir VM, com os seguintes requisitos mínimos:
 
     vCPU: 1
     RAM: 1GB
     SO: Ubuntu
     Disco: Tamanho mínimo para o SO(32GB)
 
-2- Conta de armazenamento
+    Software: 
+    - git (pré-instalado nas VMs Azure)
+    - python3 (pré-instalado nas VMs Azure)
+    - pip
 
-3- VNET
+## Criação da Rede Virtual
+1- Aceder ao recurso "Redes Virtuais"
+
+2- Carregar em "Criar"
+
+3- Em "Informações Básicas", preencher todos os campos
+
+4- Carregar em "Rever + criar" e verificar se as informações estão corretas
+
+5- Carregar em "Criar"
 
 ## Criação da Máquina Virtual
 
-1- ...
+1- Aceder ao recurso Máquinas Virtuais, opção criar nova VM do Azure.
 
+ - Nas informações básicas preencher os campos obrigatórios na configuração da instância.
+ - Nas definições de disco, selecionar o tipo e tamanho do disco para armazanemto do S.O.
+ - Nas definições de rede, em interface de rede selecionar a VNet criada anteriormente  
 6- Abrir portas
 
 ## Guia de instalação da aplicação API
