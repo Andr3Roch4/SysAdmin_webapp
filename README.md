@@ -13,6 +13,7 @@
 
     Software: 
     - git (pré-instalado nas VMs Azure)
+    - cifs-utils (pré-instalado nas VMs Azure)
     - python3 (pré-instalado nas VMs Azure)
     - pip
 
