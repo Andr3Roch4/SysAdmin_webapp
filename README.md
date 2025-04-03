@@ -3,14 +3,17 @@
 (introdução)
 
 ## Infraestrutura necessária
-1- Possuir VNET
 
-2- Possuir VM:
+1- VM:
 
     vCPU: 1
     RAM: 1GB
     SO: Ubuntu
     Disco: Tamanho mínimo para o SO(32GB)
+
+2- Conta de armazenamento
+
+3- VNET
 
 ## Criação da Máquina Virtual
 
