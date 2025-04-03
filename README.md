@@ -77,8 +77,8 @@ pip install -r requirements.txt
 sudo nano /etc/azurefiles.cred
 ```
 ```
-username= [nome da conta de armazenamento]
-password= [chave da conta de armazenamento]
+username=[nome da conta de armazenamento]
+password=[chave da conta de armazenamento]
 ```
 8- Criar a pasta ``db``
 
