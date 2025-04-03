@@ -50,7 +50,7 @@ cd webapp
 ```
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements
+pip install -r requirements.txt
 ```
 
 7- Criar o ficheiro com as credenciais da conta de armazenamento onde se encontra o ficheiro da base de dados
