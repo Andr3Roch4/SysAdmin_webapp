@@ -132,6 +132,19 @@ nano webapp/settings.py
 python manage.py runserver 0.0.0.0:8000
 ```
 
+## Calculo de Custos usado
+
+| Service category | Service type      | Custom name | Region         | Description                                                                                                                                                                                                 | Estimated monthly cost | Estimated upfront cost |
+|------------------|-------------------|-------------|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------|------------------------|
+| Calcular         | Virtual Machines  |             | Spain Central  | 1 B1ms (1 Core, 2 GB RAM) x 730 Horas (Pay as you go), Linux, (Pay as you go); 1 managed disk – S4; Inter Region transfer type, 5 GB outbound data transfer from Espanha Central to Leste da Ásia            | €16,90                 | €0,00                  |
+| Calcular         | App Service       |             | Spain Central  | Camada Gratuito; 1 (0 núcleos, 0 GB de RAM, 0 GB de armazenamento) x 730 Horas; Linux SO                                                                                                                    | €0,00                  | €0,00                  |
+| Armazenamento    | Storage Accounts  |             | Spain Central  | Redundância Armazenamento de Blobs de Bloco, Uso geral V2, Namespace simples, LRS, Quente Camada de Acesso, Capacidade de 6 GB - PAGO CONFORME O USO, 1 x 10.000 operações de Gravação, 1 x 10.000 Operações de Lista e Criação de Contêiner, 2 x 10.000 operações de Leitura, 1 x 10.000 Outras operações. 1.000 GB Recuperação de Dados, 1.000 GB Gravação de Dados, SFTP desabilitado | €0,21                  | €0,00                  |
+| Support          |                   |             | Support        |                                                                                                                                                                                                             | €0,00                  | €0,00                  |
+|                  |                   | Licensing Program | Microsoft Customer Agreement (MCA) |                                                                                                                                                                                                             |                        |                        |
+|                  |                   | Billing Account |                |                                                                                                                                                                                                             |                        |                        |
+|                  |                   | Billing Profile |                |                                                                                                                                                                                                             |                        |                        |
+|                  |                   | Total        |                |                                                                                                                                                                                                             | €17,12                 | €0,00                  |
+
 
 
 ## Contributors:
