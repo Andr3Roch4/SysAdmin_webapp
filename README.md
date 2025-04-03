@@ -30,8 +30,11 @@
 
 ## Criação da Máquina Virtual
 
-1- ...
+1- Aceder ao recurso Máquinas Virtuais, opção criar nova VM do Azure.
 
+ - Nas informações básicas preencher os campos obrigatórios na configuração da instância.
+ - Nas definições de disco, selecionar o tipo e tamanho do disco para armazanemto do S.O.
+ - Nas definições de rede, em interface de rede selecionar a VNet criada anteriormente  
 6- Abrir portas
 
 ## Guia de instalação da aplicação API
