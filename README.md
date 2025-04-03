@@ -98,9 +98,9 @@ sudo nano /etc/azurefiles.cred
 username=[nome da conta de armazenamento]
 password=[chave da conta de armazenamento]
 ```
-8- Criar o diretório ``db`` dentro do diretório ``webapp``:
+8. Criar o diretório ``db`` dentro do diretório ``webapp``:
 
-9- Para que a pasta da base de dados seja montada na pasta da webapp, a cada boot, editar o ficheiro ``/etc/fstab``, acrescentando a seguinte linha no final:
+9. Para que a pasta da base de dados seja montada na pasta da webapp, a cada boot, editar o ficheiro ``/etc/fstab``, acrescentando a seguinte linha no final:
 ```
 sudo nano /etc/fstab
 ```
@@ -117,7 +117,7 @@ systemctl daemon-reload
 sudo mount -a
 ```
 
-11- Mudar para o branch ``production``
+11. Mudar para o branch ``production``
 ```
 git checkout production
 ```
