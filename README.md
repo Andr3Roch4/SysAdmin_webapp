@@ -12,10 +12,18 @@
     SO: Ubuntu
     Disco: Tamanho mínimo para o SO(32GB)
 
+## Criação da Máquina Virtual
 
-## Guia de Implementação
+1- ...
+
+6- Abrir portas
+
+## Guia de instalação da aplicação API
 
 1- Aceder à VM por ssh
+```
+ssh <username>@<ip_publico_VM>
+```
 
 2- Atualizar lista de pacotes apt
 ``` 
@@ -33,6 +41,9 @@ git clone https://gitlab.com/lezz-git-it/webapp.git
 ```
 
 5- Navegar até à pasta ``webapp``
+```
+cd webapp
+```
 
 6- Criar um ambiente virtual e instalar os requisitos no mesmo
 
@@ -54,7 +65,7 @@ password= [chave da conta de armazenamento]
 
 9- Para que a pasta da base de dados seja montada na pasta da webapp, a cada boot, editar o ficheiro ``/etc/fstab``, acrescentando a seguinte linha no final:
 ```
-//formando30.file.core.windows.net/formando30/db /home/upskill/webapp/db cifs credentials=/etc/azurefiles.cred,vers=3.0,serverino,dir_mode=0777,file_mode=0777,nobrl 0 0
+//<nome_conta_armazenamento>.file.core.windows.net/<nome_conta_armazenamento>/db /home/<username>/webapp/db cifs credentials=/etc/azurefiles.cred,vers=3.0,serverino,dir_mode=0777,file_mode=0777,nobrl 0 0
 ```
 (nobrl - Disables byte-range locking (required for SQLite over SMB))
 
@@ -66,7 +77,18 @@ systemctl daemon-reload
 sudo mount -a
 ```
 
-11- Correr o servidor
+11- Mudar para o branch production
+```
+git checkout production
+```
+
+12- Adicionar o IP da VM à lista de allowed_hosts da aplicação
+```
+nano webapp/settings.py
+```
+
+
+13- Correr o servidor
 ```
 python manage.py runserver 0.0.0.0:8000
 ```
