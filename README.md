@@ -37,6 +37,7 @@ Este projeto teve como objetivos: 1- Criação de uma API REST para a aplicaçã
     - Região: Spain Central
     - Imagem: Linux (ubuntu 24.04)
     - Tamanho: Standard B1ms (1 vcpu, 2 GiB memória)
+    - Criação de conta de administrador da VM
  2. Nas definições de disco, selecionar o tipo e tamanho do disco para armazanemto do S.O.
 
     - Tipo: LRS HDD Standard
