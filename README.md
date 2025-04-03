@@ -32,12 +32,22 @@ Este projeto teve como objetivos: 1- Criação de uma API REST para a aplicaçã
 
 ## Criação da Máquina Virtual
 
-1- Aceder ao recurso Máquinas Virtuais, opção criar nova VM do Azure.
+1- Aceder ao recurso Máquinas Virtuais, opção criar nova Máquina Virtual do Azure.
 
- - Nas informações básicas preencher os campos obrigatórios na configuração da instância.
+ - Nas informações básicas preencher os campos obrigatórios na configuração da instância, como por exemplo:
+    - subscrição: FCUL-UPSKILL
+    - Grupo de recursos: RG-UPSKILL-SysAdmin 
+    - Região: Spain Central (Zona 3)
+    - Imagem: Linux (ubuntu 24.04)
+    - Tamanho: Standard B1ms (1 vcpu, 2 GiB memória)
  - Nas definições de disco, selecionar o tipo e tamanho do disco para armazanemto do S.O.
- - Nas definições de rede, em interface de rede selecionar a VNet criada anteriormente  
-6- Abrir portas
+    - Tipo: LRS HDD Standard
+    - Tamanho: 32 GiB
+ - Nas definições de rede, em interface de rede, selecionar a VNet criada anteriormente.  
+
+2- Abrir as portas
+
+- Nas definições de rede dentro da VM, é preciso definir as regras de entrada e saída de portas.
 
 ## Guia de instalação da aplicação API
 
