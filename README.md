@@ -31,7 +31,7 @@ De seguida, apresenta-se um guia de como atingir o segundo objetivo, utilizando 
 
 3. Selecionar "Rever + criar" e verificar se as informações estão corretas para criar a nova VNet
 
-### Criação da Máquina Virtual
+### Criação da Máquina Virtual (68.221.25.200:8000)
 
 1. Aceder ao recurso Máquinas Virtuais, opção criar nova Máquina Virtual do Azure.
    - **Subscrição**: FCUL-UPSKILL  
