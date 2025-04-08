@@ -1,0 +1,314 @@
+openapi: 3.0.4
+info:
+  title: Sistema de Impacto Ambiental
+  description: API para calcular e gerenciar o impacto ambiental de produtos com base em dados de fornecedores, distribuidores e transportadores.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000/api
+    description: Servidor local para desenvolvimento
+  - url: http://apigrupo3.westeurope.azurecontainer.io:8000/api
+    description: Servidor público para desenvolvimento
+
+tags:
+  - name: produto
+    description: Tudo sobre produtos disponiveis
+  - name: fornecedor
+    description: Tudo sobre fornecedores disponiveis
+  - name: distribuidor
+    description: Tudo sobre distribuidores disponiveis
+  - name: transportador
+    description: Tudo sobre transportadores disponiveis
+  - name: impacto
+    description: Calculo do impacto ambiental da encomenda
+  - name: ideal
+    description: Calculo da melhor escolha para a sua encomenda
+
+paths:
+  /produto:
+    get:
+      tags:
+        - produto
+      summary: Listar todos os produtos
+      operationId: listarProdutos
+      parameters: 
+        - name: nome
+          in: query
+          description: Filtra por nome
+          required: false
+          schema:
+            type: string
+        - name: cat
+          in: query
+          description: Filtra por categoria
+          required: false
+          schema:
+            type: string
+        - name: id
+          in: query
+          description: Filtra por id
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de produtos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Produto'
+
+    post:
+      summary: Criar um novo produto
+      operationId: criarProduto
+      requestBody:
+        description: parametros para criar produto 
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                peso_carregamento:
+                  type: integer
+                agua:
+                  type: integer
+                luz:
+                  type: integer
+                co2:
+                  type: integer
+                cat:
+                  type: string
+      responses:
+        '201':
+          description: Produto inserido com sucesso
+        '400':
+          description: Erro ao criar produto
+
+    put:
+      summary: Atualizar um produto
+      operationId: atualizarProduto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                nome:
+                  type: string
+                peso_carregamento:
+                  type: integer
+                agua:
+                  type: integer
+                luz:
+                  type: integer
+                co2:
+                  type: integer
+                cat:
+                  type: string
+      responses:
+        '200':
+          description: Produto atualizado com sucesso
+        '400':
+          description: Erro ao criar produto
+        '404':
+          description: Produto não encontrado
+
+    delete:
+      summary: Apagar um produto
+      operationId: apagarProduto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        '200':
+          description: Produto deletado com sucesso
+        '400':
+          description: Erro ao criar produto
+        '404':
+          description: Produto não encontrado
+
+  /fornecedores:
+    get:
+      summary: Listar todos os fornecedores
+      operationId: listarFornecedores
+      responses:
+        '200':
+          description: Lista de fornecedores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Fornecedor'
+    post:
+      summary: Criar um novo fornecedor
+      operationId: criarFornecedor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Fornecedor'
+      responses:
+        '201':
+          description: Fornecedor criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fornecedor'
+
+  /distribuidores:
+    get:
+      summary: Listar todos os distribuidores
+      operationId: listarDistribuidores
+      responses:
+        '200':
+          description: Lista de distribuidores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Distribuidor'
+    post:
+      summary: Criar um novo distribuidor
+      operationId: criarDistribuidor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Distribuidor'
+      responses:
+        '201':
+          description: Distribuidor criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Distribuidor'
+
+  /transportadores:
+    get:
+      summary: Listar todos os transportadores
+      operationId: listarTransportadores
+      responses:
+        '200':
+          description: Lista de transportadores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transportador'
+    post:
+      summary: Criar um novo transportador
+      operationId: criarTransportador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transportador'
+      responses:
+        '201':
+          description: Transportador criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transportador'
+
+  /impacto:
+    get:
+      summary: Calcular o impacto ambiental de um produto
+      operationId: calcularImpacto
+      parameters:
+        - name: produtoId
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: ID do produto
+      responses:
+        '200':
+          description: Impacto calculado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Impacto'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+
+  schemas:
+    Produto:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID do produto
+        nome:
+          type: string
+          description: Nome do produto
+        fornecedorId:
+          type: integer
+          description: ID do fornecedor
+        distribuidorId:
+          type: integer
+          description: ID do distribuidor
+        transportadorId:
+          type: integer
+          description: ID do transportador
+
+    Fornecedor:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+
+    Distribuidor:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+
+    Transportador:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+
+    Impacto:
+      type: object
+      properties:
+        produtoId:
+          type: integer
+        impacto:
+          type: number
+          format: float
+        recursosConsumidos:
+          type: number
+          format: float
