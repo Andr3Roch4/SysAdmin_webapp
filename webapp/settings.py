@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@tazl(o)cg+l8hsii1r2qr039b58pwt6*ggw#kv8-(9t5=9^#)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["clogistica.azurewebsites.net", "127.0.0.1", "68.221.25.200", "g3-webapp.azurewebsites.net"]
+ALLOWED_HOSTS = ["clogistica.azurewebsites.net", "127.0.0.1", "68.221.25.200", "g3-webapp.azurewebsites.net", "apigrupo3.westeurope.azurecontainer.io"]
 
 
 # Application definition
