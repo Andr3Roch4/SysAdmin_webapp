@@ -88,7 +88,6 @@ paths:
           description: Produto inserido com sucesso
         '400':
           description: Erro ao criar produto
-
     put:
       summary: Atualizar um produto
       operationId: atualizarProduto
@@ -120,7 +119,6 @@ paths:
           description: Erro ao criar produto
         '404':
           description: Produto não encontrado
-
     delete:
       summary: Apagar um produto
       operationId: apagarProduto
@@ -141,7 +139,7 @@ paths:
         '404':
           description: Produto não encontrado
 
-  /fornecedores:
+  /fornecedor:
     get:
       summary: Listar todos os fornecedores
       operationId: listarFornecedores
@@ -232,7 +230,7 @@ paths:
                 $ref: '#/components/schemas/Transportador'
 
   /impacto:
-    get:
+    post:
       summary: Calcular o impacto ambiental de um produto
       operationId: calcularImpacto
       parameters:
@@ -250,12 +248,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Impacto'
 
-components:
-  securitySchemes:
-    ApiKeyAuth:
-      type: apiKey
-      in: header
-      name: Authorization
+  /ideal:
+    post:
 
   schemas:
     Produto:
