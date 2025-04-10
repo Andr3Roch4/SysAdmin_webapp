@@ -25,7 +25,6 @@ def calcular_recursos(produto, distribuidor, fornecedor, transportador):
     agua_cadeia=agua_forn
     luz_cadeia=luz_dist+luz_forn+luz_trans
     co2_cadeia=co2_forn+co2_trans
-    print(agua_cadeia,luz_cadeia,co2_cadeia)
     return agua_cadeia, luz_cadeia, co2_cadeia
 
 
