@@ -22,15 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY") or get_random_secret_key()
+print(SECRET_KEY)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG") or True
 
-ALLOWED_HOSTS = ["*.azurewebsites.net", 
-                "127.0.0.1", 
-                "localhost",
-                "*.westeurope.azurecontainer.io", 
-                ]
+ALLOWED_HOSTS = ["*.azurewebsites.net", "127.0.0.1", "localhost", "*.westeurope.azurecontainer.io"]
 
 
 # Application definition
@@ -136,6 +133,7 @@ STATIC_URL = 'static/'
 
 # Para produção: pasta onde o collectstatic vai armazenar os arquivos
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
