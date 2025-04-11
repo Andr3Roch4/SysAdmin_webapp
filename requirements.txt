@@ -2,3 +2,4 @@ Django
 geopy
 whitenoise
 gunicorn
+python-dotenv
