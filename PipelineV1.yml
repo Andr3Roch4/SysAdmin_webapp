@@ -33,7 +33,7 @@ jobs:
 # Job 2: Runs on PR to 'production' branch
 - job: PullRequestToProduction
   displayName: 'Job triggered by PR to production'
-  condition: eq(variables['Build.SourceBranchName'], 'refs/pull/*')  # Ensures this job only runs for PRs
+  condition: eq(variables['Build.Reason'], 'PullRequest') # Ensures this job only runs for PRs
   steps:
     - script: |
         RESPONSE=$(curl --write-out "%{http_code}" --silent --output /dev/null http://apigrupo3.westeurope.azurecontainer.io:8000/api/produto)
