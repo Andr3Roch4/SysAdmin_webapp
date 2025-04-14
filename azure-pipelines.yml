@@ -1,0 +1,53 @@
+# Python Django
+# Test a Django project on multiple versions of Python.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
+trigger:
+  - main  # Trigger se houver push para a branch 'main'
+
+pr:
+  branches:
+    include:
+      - production  # Trigger se houver pull request direcionado à branch 'production'
+
+pool:
+  name: Local
+
+jobs:
+
+# Job 1: Corre se houver push na branch 'main'
+- job: PushToMain
+  displayName: 'Job triggered by push to main'
+  steps:
+    - script: |
+        python3 -m venv venv
+        source venv/bin/activate
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+      displayName: 'Create and activate venv + Install prerequisites'
+      
+# Instala o flake8 e executa análise de lint no diretório ./api
+    - script: |
+        source venv/bin/activate
+        python -m pip install flake8
+        flake8 ./api
+      displayName: 'Run Python lint'
+      continueOnError: false
+
+# Job 2: Runs on PR to 'production' branch
+- job: PullRequestToProduction
+  displayName: 'Job triggered by PR to production'
+  condition: eq(variables['Build.Reason'], 'PullRequest')  # Runs only on PRs
+  steps:
+    - script: |
+        RESPONSE=$(curl --write-out "%{http_code}" --silent --output /dev/null http://apigrupo3.westeurope.azurecontainer.io:8000/api/produto)
+        if [[ "$RESPONSE" -ge 200 && "$RESPONSE" -lt 300 ]]; then
+          echo "Request succeeded with status code $RESPONSE."
+        else
+          echo "Request failed with status code $RESPONSE."
+          exit 1  # Stop the pipeline if the status code is not 200-299
+        fi
+      displayName: 'Acceptance test'
+      continueOnError: false
+
