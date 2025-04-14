@@ -31,7 +31,7 @@ print(SECRET_KEY)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG") or True
 
-ALLOWED_HOSTS = ["*.azurewebsites.net", "127.0.0.1", "localhost", "*.westeurope.azurecontainer.io"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "*.azurewebsites.net", "*.azurecontainer.io", "*.azurecontainerapps.io"]
 
 
 # Application definition
