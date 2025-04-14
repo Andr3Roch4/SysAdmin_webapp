@@ -10,7 +10,7 @@ pool:
   name: Local
 
 variables: 
-  imageTag: $(Build.BuildTimestamp)
+    imageTag: $(Build.BuildTimestamp)
 
 stages:
   - stage: build
@@ -29,18 +29,17 @@ stages:
       - job: dockerbuild
         displayName: 'Build docker image'
         steps:
+          - script: |
+              docker login AzureHubG3.azurecr.io -u $(ACR_USERNAME) -p $(ACR_PASSWORD)
+            displayName: 'Login to container registry'
+            env:
+              ACR_USERNAME: $(AzureHubG3user)
+              ACR_PASSWORD: $(AzureHubG3pass)
         # Build the image
           - script: |
-              docker build -t api:$(imageTag) -f ./Dockerfile .
-              docker save -o $(Pipeline.Workspace)/image.tar api:$(imageTag)
+              docker build -t AzureHubG3.azurecr.io/api:$(imageTag) -f ./Dockerfile .
+              docker push AzureHubG3.azurecr.io/api:$(imageTag)
             displayName: 'Build and save Docker image'
-      
-          # Publish the image as a pipeline artifact
-          - task: PublishPipelineArtifact@0
-            displayName: 'Publish Docker image artifact'
-            inputs:
-              targetPath: $(Pipeline.Workspace)/image.tar
-              artifactName: 'dockerImage'
               
   - stage: deploy
     dependsOn: 
