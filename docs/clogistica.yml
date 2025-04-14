@@ -67,7 +67,7 @@ paths:
         description: parametros para criar produto 
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               type: object
               properties:
@@ -122,15 +122,13 @@ paths:
     delete:
       summary: Apagar um produto
       operationId: apagarProduto
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
+      parameters:
+        - name: id
+          in: query
+          description: ID do produto a ser eliminado
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
           description: Produto deletado com sucesso
@@ -251,6 +249,13 @@ paths:
   /ideal:
     post:
 
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      
   schemas:
     Produto:
       type: object
@@ -261,39 +266,81 @@ paths:
         nome:
           type: string
           description: Nome do produto
-        fornecedorId:
+        peso_carregamento:
           type: integer
-          description: ID do fornecedor
-        distribuidorId:
+          description: Peso desse produto que pode ser transportado num carregamento
+        agua:
           type: integer
-          description: ID do distribuidor
-        transportadorId:
+          description: Valor base de quantidade de água (em L) consumida para produzir 1kg de produto
+        luz:
           type: integer
-          description: ID do transportador
+          description: Valor base de eletricidade (em kWh) consumida para produzir 1kg de produto
+        CO2:
+          type: integer
+          description: Valor base de CO2 (em kg) libertado para produzir 1kg de produto
+        cat:
+          type: string
+          description: Categoria a que pertence o produto
 
     Fornecedor:
       type: object
       properties:
         id:
           type: integer
+          description: ID do fornecedor
         nome:
           type: string
+          description: Nome do fornecedor
+        coefAgua:
+          type: integer
+          description: Coeficiente que indica se consome mais ou menos CO2 água que o valor base
+        coefLuz:
+          type: integer
+          description: Coeficiente que indica se consome mais ou menos eletricidade do que o valor base
+        coefCO2:
+          type: integer
+          description: Coeficiente que indica se liberta mais ou menos CO2 do que o valor base
+        local:
+          type: string
+          description: Cidade onde está localizado o fornecedor
+        cat:
+          type: string
+          description: Categorias de produtos que o fornecedor produz
 
     Distribuidor:
       type: object
       properties:
         id:
           type: integer
+          description: ID do fornecedor
         nome:
           type: string
+          description: Nome do fornecedor
+        local:
+          type: string
+          description: Cidade onde está localizado o distribuidor
+        coefLuz:
+          type: integer
+          description: Coeficiente que indica se consome mais ou menos eletricidade do que o valor base
 
     Transportador:
       type: object
       properties:
         id:
           type: integer
+          description: ID do fornecedor
         nome:
           type: string
+          description: Nome do fornecedor
+        local:
+          type: string
+          description: Cidade de onde partem os camiões
+        coefLuz:
+          type: integer
+          description: Coeficiente que indica se consome mais ou menos eletricidade do que o valor base
+        coefCO2:
+          type: integer
+          description: Coeficiente que indica se liberta mais ou menos CO2 do que o valor base
 
     Impacto:
       type: object
