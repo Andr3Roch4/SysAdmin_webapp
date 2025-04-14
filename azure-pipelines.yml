@@ -29,6 +29,10 @@ stages:
       - job: dockerbuild
         displayName: 'Build docker image'
         steps:
+          - task: DockerInstaller@0
+            inputs:
+              dockerVersion: 'v28.0.4'
+
           - script: |
               docker login AzureHubG3.azurecr.io -u $(ACR_USERNAME) -p $(ACR_PASSWORD)
             displayName: 'Login to container registry'
