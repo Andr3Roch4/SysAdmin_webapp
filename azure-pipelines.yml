@@ -28,6 +28,8 @@ stages:
       # Build da docker image
       - job: dockerbuild
         displayName: 'Build docker image'
+        variables: 
+        - group: g3vars
         steps:
           - task: DockerInstaller@0
             inputs:
