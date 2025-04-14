@@ -20,6 +20,7 @@ stages:
         displayName: 'Análise flake8'
         steps:
           - script: |
+              python3 -m venv venv
               source venv/bin/activate
               python -m pip install flake8
               flake8 ./api
@@ -57,7 +58,6 @@ stages:
         displayName: 'Job triggered by push to main'
         steps:
           - script: |
-              python3 -m venv venv
               source venv/bin/activate
               python -m pip install --upgrade pip
               pip install -r requirements.txt
