@@ -7,7 +7,7 @@ RUN mkdir /webapp
 
 WORKDIR /webapp
 
-RUN git clone https://gitlab.com/lezz-git-it/webapp.git .
+COPY . /webapp
 
 RUN pip install --upgrade pip
 
