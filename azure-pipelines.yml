@@ -36,8 +36,7 @@ stages:
               dockerVersion: '28.0.4'
 
           - script: |
-              echo "$(AzureHubG3user) $(AzureHubG3pass)"
-              docker login AzureHubG3.azurecr.io -u $(ACR_USERNAME) -p $(ACR_PASSWORD)
+              docker login AzureHubG3.azurecr.io -u $(AzureHubG3user) -p $(AzureHubG3pass)
             displayName: 'Login to container registry'
             env:
               ACR_USERNAME: $(AzureHubG3user)
