@@ -43,6 +43,7 @@ stages:
               ACR_PASSWORD: $(AzureHubG3pass)
         # Build the image
           - script: |
+              echo "Building timestamp: $(Build.BuildTimestamp)"
               docker build -t AzureHubG3.azurecr.io/api:$(imageTag) -f ./Dockerfile .
               docker push AzureHubG3.azurecr.io/api:$(imageTag)
             displayName: 'Build and save Docker image'
