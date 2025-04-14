@@ -31,7 +31,7 @@ stages:
         steps:
           - task: DockerInstaller@0
             inputs:
-              dockerVersion: 'v28.0.4'
+              dockerVersion: '28.0.4'
 
           - script: |
               docker login AzureHubG3.azurecr.io -u $(ACR_USERNAME) -p $(ACR_PASSWORD)
