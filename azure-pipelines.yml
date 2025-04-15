@@ -10,7 +10,7 @@ pool:
   name: Local
 
 variables: 
-    imageTag: $(date +"%d%m%Y")
+    imageTag: $(Build.BuildId)$(date +"%d%m%Y")
 
 stages:
   - stage: build
@@ -29,6 +29,7 @@ stages:
       # Build da docker image
       - job: dockerbuild
         displayName: 'Build docker image'
+        dependsOn: Flake8
         variables: 
         - group: g3vars
         steps:
@@ -44,7 +45,7 @@ stages:
               ACR_PASSWORD: $(AzureHubG3pass)
         # Build the image
           - script: |
-              echo "Building timestamp: $(imageTag)"
+              echo "Building timestamp: $(date +"%d%m%Y")"
               docker build -t AzureHubG3.azurecr.io/api:$(imageTag) -f ./Dockerfile .
               docker push AzureHubG3.azurecr.io/api:$(imageTag)
             displayName: 'Build and save Docker image'
@@ -53,27 +54,20 @@ stages:
     dependsOn: 
       - build
     jobs:
-      # preparar deploy local
-      - job: Preparartestes
-        displayName: 'Preparar para testes'
+      # preparar deploy local e realizar testes locais
+      - job: Testeslocais
+        displayName: 'Preparar e realizar testes locais'
         steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.12'
           - script: |
+              python3 -m venv venv
               source venv/bin/activate
               python -m pip install --upgrade pip
               pip install -r requirements.txt
-            displayName: 'Create and activate venv + Install prerequisites'
-          - script: |
               pip install schemathesis
               python manage.py migrate
-            displayName: 'Install test tool'
-      # realizar testes locais ao API
-      - job: Testeslocais
-        displayName: 'Realizar testes locais'
-        steps:
+            displayName: 'Create and activate venv + Install prerequisites and test tool'
           - script: |
+              source venv/bin/activate
               python manage.py runserver &
               sleep 5
             displayName: 'Start server'
@@ -88,6 +82,7 @@ stages:
             displayName: 'Acceptance test'
             continueOnError: "false"
           - script: 
+              source venv/bin/activate
               schemathesis run --base-url=http://localhost:8000 docs/clogistica.yml \
                 --checks=all \
                 --validate-schema=true \
@@ -97,7 +92,7 @@ stages:
           # Publish test results
           - task: PublishTestResults@2
             inputs:
-              testResultsFiles: '**/*-results.xml'
+              testResultsFiles: '*-results.xml'
               testRunTitle: 'API Test Results'
             condition: succeededOrFailed()
 
