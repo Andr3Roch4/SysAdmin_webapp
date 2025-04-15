@@ -501,34 +501,223 @@ paths:
                     example: Fornecedor não encontrado.
   /distribuidor:
     get:
+      tags: 
+      - distribuidor
       summary: Listar todos os distribuidores
-      operationId: listarDistribuidores
+      description: Retorna uma lista e filtos de distribuidores
+      parameters: 
+        - name: nome
+          in: query
+          description: Filtra por nome do distribuidor
+          required: false
+          schema:
+            type: string
+        - name: cat
+          in: query
+          description: Filtra por categoria do distribuidor
+          required: false
+          schema:
+            type: string
+        - name: id
+          in: query
+          description: Filtra por id
+          required: false
+          schema:
+            type: integer
       responses:
         '200':
-          description: Lista de distribuidores
+          description: Lista distribuidores fornecida com sucesso!
           content:
             application/json:
               schema:
-                type: array
+                type: array 
                 items:
                   $ref: '#/components/schemas/Distribuidor'
     post:
-      summary: Criar um novo distribuidor
-      operationId: criarDistribuidor
+      tags:
+        - distribuidor
+      summary: Cria um novo distribuidor
+      description: Criação de um novo distribuidor
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  description: Nome do novo distribuidor
+                local:
+                  type: string
+                  description: Local
+                coefluz:
+                  type: number
+                  description: coeficiente luz
+                  default: 1
+              required:
+                - nome
+                - local
+                - coefluz
+      responses:
+        '201':
+          description: Inserido com sucesso!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: Distribuidor inserido com sucesso!
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Distribuidor já existe na Base de Dados!
+                oneOf:
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Faltam parâmetros.
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Valor inválido.
+    put:
+      tags:
+        - distribuidor
+      summary: Atualização de um distribuidor
+      description: Atualiza um distribuidor existente da Base de Dados
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Distribuidor'
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: is do distribuidor
+                nome:
+                  type: string
+                  description: Nome a ser atualizado
+                local:
+                  type: string
+                  description: Local a ser atualizado
+                coefluz:
+                  type: number
+                  description: Coeficiente da luz
+              required:
+                - id
       responses:
-        '201':
-          description: Distribuidor criado com sucesso
+        '200':
+          description: Distribuidor atualizado
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Distribuidor'
-
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: Distribuidor atualizado com sucesso!
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Formato JSON inválido.
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Faltam parâmetros.
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Valor inválido.
+        '404':
+          description: Distribuidor não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Distribuidor não encontrado
+    delete:
+      tags:
+        - distribuidor
+      summary: Remove um distribuidor
+      description: Remove um distribuidor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: is do distribuidor
+              required:
+                - id
+      responses:
+        '200':
+          description: Distribuidor removido com sucesso!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: 'Distribuidor removido com sucesso.'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Formato JSON inválido.
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Faltam parâmetros.
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Valor inválido.
+        '404':
+          description: Distribuidor não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Distribuidor não encontrado
   /transportador:
     get:
       tags:
