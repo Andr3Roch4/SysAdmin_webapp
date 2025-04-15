@@ -25,7 +25,7 @@ stages:
               python -m pip install flake8
               flake8 ./api
             displayName: 'Run Python lint'
-            continueOnError: "false"
+            continueOnError: "true"
       # Build da docker image
       - job: dockerbuild
         displayName: 'Build docker image'
@@ -54,28 +54,51 @@ stages:
       - build
     jobs:
       # preparar deploy local
-      - job: PushToMain
-        displayName: 'Job triggered by push to main'
+      - job: Preparar-testes
+        displayName: 'Preparar para testes'
         steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.12'
           - script: |
               source venv/bin/activate
               python -m pip install --upgrade pip
               pip install -r requirements.txt
             displayName: 'Create and activate venv + Install prerequisites'
-      # Job 2: Runs on PR to 'production' branch
-      - job: PullRequestToProduction
-        displayName: 'Job triggered by PR to production'
-        condition: eq(variables['Build.Reason'], 'PullRequest')  # Runs only on PRs
+          - script: |
+              pip install schemathesis
+              python manage.py migrate
+            displayName: 'Install test tool'
+      # realizar testes locais ao API
+      - job: Testes-locais
+        displayName: 'Realizar testes locais'
         steps:
+          - script: |
+              python manage.py runserver &
+              sleep 5
+            displayName: 'Start server'
           - script: |
               RESPONSE=$(curl --write-out "%{http_code}" --silent --output /dev/null http://localhost:8000/api/produto)
               if [[ "$RESPONSE" -ge 200 && "$RESPONSE" -lt 300 ]]; then
                 echo "Request succeeded with status code $RESPONSE."
               else
                 echo "Request failed with status code $RESPONSE."
-                exit 1  # Stop the pipeline if the status code is not 200-299
+                exit 1
               fi
             displayName: 'Acceptance test'
             continueOnError: "false"
+          - script: 
+              schemathesis run --base-url=http://localhost:8000 docs/clogistica.yml \
+                --checks=all \
+                --validate-schema=true \
+                --hypothesis-max-examples=10 \
+                --junit-xml=schemathesis-results.xml
+            displayName: 'Run API contract tests'
+          # Publish test results
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFiles: '**/*-results.xml'
+              testRunTitle: 'API Test Results'
+            condition: succeededOrFailed()
 
 

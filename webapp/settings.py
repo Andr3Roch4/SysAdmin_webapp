@@ -33,6 +33,9 @@ DEBUG = os.environ.get("DJANGO_DEBUG") or True
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "*.azurewebsites.net", "*.azurecontainer.io", "*.azurecontainerapps.io"]
 
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_URLS_REGEX = r"^/api/.*$"
 
 # Application definition
 
@@ -43,12 +46,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'cadeialogistica',
     'api'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
