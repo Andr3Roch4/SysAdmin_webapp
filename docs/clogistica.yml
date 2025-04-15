@@ -1103,15 +1103,31 @@ components:
     Impacto:
       type: object
       properties:
-        produtoId:
-          type: integer
-        impacto:
+        produto:
+          type: string
+        fornecedor:
+          type: string
+        distribuidor:
+          type: string
+        transportador:
+          type: string
+        luz:
           type: number
           format: float
-        recursosConsumidos:
+          description: luz kWh por kg de produto
+        co2:
           type: number
           format: float
-    
+          description: kg CO2 por kg de produto
+        agua:
+          type: number
+          format: float
+          description: litros por kg de produto
+        score:
+          type: number
+          format: float
+          description: score de impacto ambiental, menor valor melhor
+        
     Ideal:
       type: object
       properties:

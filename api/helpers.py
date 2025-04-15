@@ -9,8 +9,10 @@ def calcular_recursos(produto, distribuidor, fornecedor, transportador):
     CO2_transportador=0.3       # kg de CO2/km em media dos camioes
     luz_transportador=0.03      # kWh/km em media dos camioes para refrigeração
     tempoarmazenamento=random.randrange(1,30)
-    
-    distancia_provisoria=float(distancia(fornecedor.local, distribuidor.local))+float(distancia(transportador.local,fornecedor.local))
+    try:
+        distancia_provisoria=float(distancia(fornecedor.local, distribuidor.local))+float(distancia(transportador.local,fornecedor.local))
+    except TypeError:
+        return JsonResponse({"erro":"Não existe uma das cidades na base de dados."})
     if distancia_provisoria < 50:
         distancia_provisoria=50
     #distribuidor.coefs(luz_distribuidor, tempoarmazenamento)
@@ -49,7 +51,7 @@ def cadeia_menor_impact(produto, distribuidor):
     
     # Calcular a cadeia ideal com menor impacto
     impact=10000
-    fornecedor_escolhido=Fornecedor.objects.all().first()
+    fornecedor_escolhido=lista_fornecedores_possiveis[0]
     transportador_escolhido=Transportador.objects.all().first()
     if not lista_fornecedores_possiveis:
         return JsonResponse({"erro":"Não existe fornecedor para o produto selecionado."}, status=404)
@@ -59,9 +61,6 @@ def cadeia_menor_impact(produto, distribuidor):
             impact_provisorio=impact_score(agua_cadeia_provisorio, luz_cadeia_provisorio, co2_cadeia_provisorio)
             if impact > impact_provisorio:
                 # Variaveis com info da cadeia escolhida e da que ficou em segundo lugar
-                fornecedor_anterior=fornecedor_escolhido
-                transportador_anterior=transportador_escolhido
-                impact_anterior=impact
                 fornecedor_escolhido=f
                 transportador_escolhido=t
                 impact=impact_provisorio
@@ -124,7 +123,8 @@ def distancia(citie1, citie2):
     "Loule": {"latitude": 37.1393, "longitude": -8.0246},
     "Odivelas": {"latitude": 38.7975, "longitude": -9.1703},
     "Vila Nova de Gaia": {"latitude": 41.1331, "longitude": -8.6110},
-    "Portimao":{"latitude": 37.1366, "longitude": -8.5377}
+    "Portimao":{"latitude": 37.1366, "longitude": -8.5377},
+    "Moura":{"latitude": 38.1401, "longitude": -7.4485}
     }
 
     for c in cidades_portuguesas:

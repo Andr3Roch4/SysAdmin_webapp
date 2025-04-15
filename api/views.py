@@ -314,10 +314,10 @@ def impacto(request):
                 "fornecedor":f"{f.nome}, {f.local}",
                 "distribuidor":f"{d.nome}, {d.local}",
                 "transportador":f"{t.nome}, {t.local}",
-                f"luz kWh por kg de {p.nome}":f"{luz_cadeia:.2f}",
-                f"co2 kg CO2 por kg de {p.nome}":f"{co2_cadeia:.2f}",
-                f"agua litros por kg de {p.nome}":f"{agua_cadeia:.2f}",
-                "score":f"{score:.2f}"
+                "luz":round(luz_cadeia, 2),
+                "co2":round(co2_cadeia, 2),
+                "agua":round(agua_cadeia, 2),
+                "score":round(score, 2)
             }
             return JsonResponse(json_return)
         except AttributeError:
@@ -356,10 +356,10 @@ def ideal(request):
                 "fornecedor":f"{f.nome}, {f.local}",
                 "distribuidor":f"{d.nome}, {d.local}",
                 "transportador":f"{t.nome}, {t.local}",
-                f"luz kWh por kg de {p.nome}":f"{luz:.2f}",
-                f"co2 kg CO2 por kg de {p.nome}":f"{co2:.2f}",
-                f"agua litros por kg de {p.nome}":f"{agua:.2f}",
-                "score":f"{score:.2f}"
+                "luz":round(luz, 2),
+                "co2":round(co2, 2),
+                "agua":round(agua, 2),
+                "score":round(score, 2)
             }
             return JsonResponse(json_return)
         except AttributeError:
