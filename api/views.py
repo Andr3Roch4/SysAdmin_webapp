@@ -17,7 +17,7 @@ def produto(request):
         categoria=request.GET.get('cat', '').strip()
         id=request.GET.get('id', '')
         p=Produto.objects.all().filter(nome__icontains=nome, cat__icontains=categoria, id__icontains=id)
-        return JsonResponse({"produto":list(p.values())})
+        return JsonResponse({"produto":list(p.values())}, status=200)
     
     elif request.method == "POST":
         try:
@@ -28,7 +28,7 @@ def produto(request):
             co2=int(request.POST.get('co2'))
             cat=request.POST.get('cat').strip().capitalize()
             if Produto.objects.filter(nome__iexact=nome).exists():
-                return JsonResponse({"erro": "Produto já existe na Base de Dados!."}, status=400)   
+                return JsonResponse({"erro": "Produto já existe na Base de Dados!."}, status=404)   
             produto=Produto.objects.create(
                 nome=nome,
                 peso_carregamento=peso_carregamento,
@@ -60,7 +60,7 @@ def produto(request):
                 produto.CO2 = int(data.get('CO2', produto.CO2))
                 produto.cat = data.get('cat', produto.cat).strip().capitalize()
                 produto.save()
-                return JsonResponse({"mensagem": f'Produto "{produto.nome}" atualizado com sucesso'})
+                return JsonResponse({"mensagem": f'Produto "{produto.nome}" atualizado com sucesso'}, status=202)
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
         except AttributeError:
@@ -77,7 +77,7 @@ def produto(request):
                 return JsonResponse({"erro": "Produto não encontrado."}, status=404)
             else:
                 produto.delete()
-                return JsonResponse({"mensagem": f'Produto com id {id} removido com sucesso.'})
+                return JsonResponse({"mensagem": f'Produto com id {id} removido com sucesso.'}, status=203)
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
         except AttributeError:
@@ -93,7 +93,7 @@ def fornecedor(request):
         categoria=request.GET.get('cat', '').strip()
         id=request.GET.get('id', '')
         f=Fornecedor.objects.all().filter(nome__icontains=nome, local__icontains=local, cat__icontains=categoria, id__icontains=id)
-        return JsonResponse({"fornecedor":list(f.values())})
+        return JsonResponse({"fornecedor":list(f.values())}, status=200)
     
     elif request.method == "POST":
         try:
@@ -104,7 +104,7 @@ def fornecedor(request):
             local=request.POST.get('local').strip().capitalize()
             cat=request.POST.get('cat').strip().capitalize()
             if Fornecedor.objects.filter(nome__iexact=nome).exists():
-                return JsonResponse({"erro": "Fornecedor já existe na Base de Dados!."}, status=400)
+                return JsonResponse({"erro": "Fornecedor já existe na Base de Dados!."}, status=404)
             else:
                 fornecedor=Fornecedor.objects.create(
                     nome=nome,
@@ -137,7 +137,7 @@ def fornecedor(request):
                 fornecedor.local = data.get('local', fornecedor.local).strip().capitalize()
                 fornecedor.cat = data.get('cat', fornecedor.cat).strip().capitalize()
                 fornecedor.save()
-                return JsonResponse({"mensagem": f"Fornecedor '{fornecedor.nome}' atualizado com sucesso"})
+                return JsonResponse({"mensagem": f"Fornecedor '{fornecedor.nome}' atualizado com sucesso"}, status=202)
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
         except AttributeError:
@@ -154,7 +154,7 @@ def fornecedor(request):
                 return JsonResponse({"erro": "Fornecedor não encontrado."}, status=404)
             else:
                 fornecedor.delete()
-                return JsonResponse({"mensagem": f'Fornecedor com id {id} removido com sucesso.'})
+                return JsonResponse({"mensagem": f'Fornecedor com id {id} removido com sucesso.'}, status=203)
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
         except AttributeError:
@@ -169,7 +169,7 @@ def distribuidor(request):
         local=request.GET.get("local", "").strip().lower()
         id=request.GET.get("id", "")
         dist=Distribuidor.objects.all().filter(nome__icontains=nome, local__icontains=local, id__icontains=id)
-        return JsonResponse({"distribuidor":list(dist.values())})
+        return JsonResponse({"distribuidor":list(dist.values())}, status=200)
     
     elif request.method == "POST":
         try:
