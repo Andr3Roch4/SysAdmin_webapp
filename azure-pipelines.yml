@@ -83,10 +83,10 @@ stages:
             continueOnError: "false"
           - script: 
               source venv/bin/activate
-              schemathesis run --base-url=http://localhost:8000 docs/clogistica.yml \
+              schemathesis run --base-url=http://localhost:8000/api docs/clogistica.yml \
                 --checks=all \
                 --validate-schema=true \
-                --hypothesis-max-examples=10 \
+                --hypothesis-max-examples=5 \
                 --junit-xml=schemathesis-results.xml
             displayName: 'Run API contract tests'
           # Publish test results

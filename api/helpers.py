@@ -12,7 +12,7 @@ def calcular_recursos(produto, distribuidor, fornecedor, transportador):
     try:
         distancia_provisoria=float(distancia(fornecedor.local, distribuidor.local))+float(distancia(transportador.local,fornecedor.local))
     except TypeError:
-        return JsonResponse({"erro":"Não existe uma das cidades na base de dados."})
+        return JsonResponse({"erro":"Não existe uma das cidades na base de dados."}, status=404)
     if distancia_provisoria < 50:
         distancia_provisoria=50
     #distribuidor.coefs(luz_distribuidor, tempoarmazenamento)

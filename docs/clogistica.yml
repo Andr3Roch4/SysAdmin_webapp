@@ -56,9 +56,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Produto'
+                type: object
+                properties:
+                  produto:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Produto'
     post:
       tags:
         - produto
@@ -76,15 +79,23 @@ paths:
                   description: Nome do produto
                 peso_carregamento:
                   type: integer
+                  minimum: 1000
+                  maximum: 100000
                   description: Peso de carregamento do produto
                 agua:
                   type: integer
+                  minimum: 1
+                  maximum: 1000
                   description: Consumo de água do produto
                 luz:
                   type: integer
+                  minimum: 1
+                  maximum: 1000
                   description: Consumo de luz do produto
                 co2:
                   type: integer
+                  minimum: 1
+                  maximum: 1000
                   description: Emissão de CO2 do produto
                 cat:
                   type: string
@@ -148,15 +159,23 @@ paths:
                   description: Altera nome do produto
                 peso_carregamento:
                   type: integer
+                  minimum: 1
+                  maximum: 100000
                   description: Altera peso de carregamento
                 agua:
                   type: integer
+                  minimum: 1
+                  maximum: 1000
                   description: Altera consumo de água
                 luz:
                   type: integer
+                  minimum: 1
+                  maximum: 1000
                   description: Altera consumo de luz
                 CO2:
                   type: integer
+                  minimum: 1
+                  maximum: 1000
                   description: Altera emissão de CO2
                 cat:
                   type: string
@@ -280,9 +299,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Fornecedor'
+                type: object
+                properties:
+                  fornecedor:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Fornecedor'
     post:
       tags:
         - fornecedor
@@ -502,9 +524,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array 
-                items:
-                  $ref: '#/components/schemas/Distribuidor'
+                type: object 
+                properties:
+                  distribuidor:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Distribuidor'
     post:
       tags:
         - distribuidor
@@ -698,9 +723,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Transportador'
+                type: object
+                properties:
+                  transportador:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Transportador'
 
     post:
       tags:
@@ -975,6 +1003,16 @@ paths:
                   erro:
                     type: string
                     example: Faltam parâmetros.
+        '404':
+          description: Erro na requisição
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Não existe uma das cidades na base de dados.
 
 components:
   schemas:
