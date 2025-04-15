@@ -179,12 +179,11 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Formato JSON inválido.
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Formato JSON inválido.
         '404':
           description: Produto não encontrado
           content:
@@ -526,12 +525,12 @@ paths:
                   description: Localização do distribuidor a adicionar
                 coefluz:
                   type: number
+                  format: float
                   description: Coeficiente de consumo de eletricidade do distribuidor a adicionar
                   default: 1
               required:
                 - nome
                 - local
-                - coefluz
       responses:
         '201':
           description: Inserido com sucesso!
@@ -552,18 +551,17 @@ paths:
                 properties:
                   erro:
                     type: string
+                    example: Valor inválido.
+        '404':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
                     example: Distribuidor já existe na Base de Dados!
-                oneOf:
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Faltam parâmetros.
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Valor inválido.
     put:
       tags:
         - distribuidor
@@ -578,20 +576,21 @@ paths:
               properties:
                 id:
                   type: integer
-                  description: is do distribuidor
+                  description: id do distribuidor
                 nome:
                   type: string
-                  description: Nome a ser atualizado
+                  description: Nome a ser alterado
                 local:
                   type: string
-                  description: Local a ser atualizado
+                  description: Local a ser alterado
                 coefluz:
                   type: number
-                  description: Coeficiente da luz
+                  format: float
+                  description: Coeficiente da luz a ser alterado
               required:
                 - id
       responses:
-        '200':
+        '202':
           description: Distribuidor atualizado
           content:
             application/json:
@@ -606,22 +605,11 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Formato JSON inválido.
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Faltam parâmetros.
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Valor inválido.
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Formato JSON inválido.
         '404':
           description: Distribuidor não encontrado
           content:
@@ -650,7 +638,7 @@ paths:
               required:
                 - id
       responses:
-        '200':
+        '203':
           description: Distribuidor removido com sucesso!
           content:
             application/json:
@@ -665,22 +653,11 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Formato JSON inválido.
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Faltam parâmetros.
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Valor inválido.
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Valor inválido.
         '404':
           description: Distribuidor não encontrado
           content:
@@ -745,10 +722,12 @@ paths:
                   description: Cidade de onde partem os camiões
                 coefluz:
                   type: number
+                  format: float
                   description: Coeficiente de consumo de eletricidade (default=1)
                   default: 1
                 coefco2:
                   type: number
+                  format: float
                   description: Coeficiente de consumo de CO2 (default=1)
                   default: 1
               required:
@@ -764,28 +743,27 @@ paths:
                 properties:
                   mensagem:
                     type: string
-                    example: 'Transportador "Nome do Transportador" inserido com sucesso!'
+                    example: Transportador "Nome do Transportador" inserido com sucesso!
         '400':
           description: Erro na requisição
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Transportador já existe na Base de Dados!
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Faltam parâmetros.
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Valor inválido.
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Faltam parâmetros.
+        '404':
+          description: Erro na requisição
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Transportador já existe na Base de Dados!
 
     put:
       tags:
@@ -804,20 +782,22 @@ paths:
                   description: ID do transportador a ser atualizado
                 nome:
                   type: string
-                  description: Novo nome do transportador
+                  description: Altera nome do transportador
                 local:
                   type: string
-                  description: Nova localização do transportador
+                  description: Altera localização do transportador
                 coefluz:
                   type: number
-                  description: Novo coeficiente de luz
+                  format: float
+                  description: Altera coeficiente de luz
                 coefco2:
                   type: number
-                  description: Novo coeficiente de CO2
+                  format: float
+                  description: Altera coeficiente de CO2
               required:
                 - id
       responses:
-        '200':
+        '202':
           description: Transportador atualizado com sucesso
           content:
             application/json:
@@ -826,28 +806,17 @@ paths:
                 properties:
                   mensagem:
                     type: string
-                    example: 'Transportador "Nome Atualizado" atualizado com sucesso'
+                    example: Transportador "Nome Atualizado" atualizado com sucesso
         '400':
           description: Erro na requisição
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Formato JSON inválido.
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Faltam parâmetros.
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Valor inválido.
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Formato JSON inválido.
         '404':
           description: Transportador não encontrado
           content:
@@ -877,7 +846,7 @@ paths:
               required:
                 - id
       responses:
-        '200':
+        '203':
           description: Transportador removido com sucesso
           content:
             application/json:
@@ -886,28 +855,17 @@ paths:
                 properties:
                   mensagem:
                     type: string
-                    example: 'Transportador com id 123 removido com sucesso.'
+                    example: Transportador com id "ID do transportador" removido com sucesso.
         '400':
           description: Erro na requisição
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Formato JSON inválido.
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Faltam parâmetros.
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Valor inválido.
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Faltam parâmetros.
         '404':
           description: Transportador não encontrado
           content:
@@ -944,6 +902,11 @@ paths:
                 transportador:
                   type: integer
                   description: id do transportador
+                required:
+                  - produto
+                  - fornecedor
+                  - distribuidor
+                  - transportador
       responses:
         '200':
           description: Impacto calculado
@@ -956,12 +919,21 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Faltam parâmetros.
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Faltam parâmetros.
+        '404':
+          description: Erro na requisição
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Fornecedor não produz o produto selecionado.
                  
 
   /ideal:
@@ -995,12 +967,11 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Faltam parâmetros.
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Faltam parâmetros.
 
 components:
   schemas:
@@ -1087,10 +1058,12 @@ components:
           type: string
           description: Cidade de onde partem os camiões
         coefLuz:
-          type: integer
+          type: number
+          format: float
           description: Coeficiente que indica se consome mais ou menos eletricidade do que o valor base
         coefCO2:
-          type: integer
+          type: number
+          format: float
           description: Coeficiente que indica se liberta mais ou menos CO2 do que o valor base
 
     Impacto:
@@ -1120,8 +1093,3 @@ components:
           type: number
           format: float
           description: score de impacto ambiental, menor valor melhor
-        
-    Ideal:
-      type: object
-      properties:
-        
