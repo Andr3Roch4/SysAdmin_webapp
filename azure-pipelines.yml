@@ -57,10 +57,6 @@ stages:
       - job: Preparartestes
         displayName: 'Preparar para testes'
         steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.12'
-              addToPath: true
           - script: |
               source venv/bin/activate
               python -m pip install --upgrade pip
