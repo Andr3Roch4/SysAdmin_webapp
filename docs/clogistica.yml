@@ -902,11 +902,11 @@ paths:
                 transportador:
                   type: integer
                   description: id do transportador
-                required:
-                  - produto
-                  - fornecedor
-                  - distribuidor
-                  - transportador
+              required:
+                - produto
+                - fornecedor
+                - distribuidor
+                - transportador
       responses:
         '200':
           description: Impacto calculado
@@ -955,9 +955,9 @@ paths:
                 distribuidor:
                   type: integer
                   description: id do distribuidor
-                required:
-                  - produto
-                  - distribuidor
+              required:
+                - produto
+                - distribuidor
       responses:
         '200':
           description: Impacto calculado
