@@ -54,26 +54,18 @@ stages:
     dependsOn: 
       - build
     jobs:
-      # preparar deploy local
-      - job: Preparartestes
-        displayName: 'Preparar para testes'
+      # preparar deploy local e realizar testes locais
+      - job: Testeslocais
+        displayName: 'Preparar realizar testes locais'
         steps:
           - script: |
               python3 -m venv venv
               source venv/bin/activate
               python -m pip install --upgrade pip
               pip install -r requirements.txt
-            displayName: 'Create and activate venv + Install prerequisites'
-          - script: |
-              source venv/bin/activate
               pip install schemathesis
               python manage.py migrate
-            displayName: 'Install test tool'
-      # realizar testes locais ao API
-      - job: Testeslocais
-        displayName: 'Realizar testes locais'
-        dependsOn: Preparartestes
-        steps:
+            displayName: 'Create and activate venv + Install prerequisites and test tool'
           - script: |
               source venv/bin/activate
               python manage.py runserver &
