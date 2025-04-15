@@ -29,6 +29,7 @@ stages:
       # Build da docker image
       - job: dockerbuild
         displayName: 'Build docker image'
+        dependsOn: Flake8
         variables: 
         - group: g3vars
         steps:
@@ -58,6 +59,7 @@ stages:
         displayName: 'Preparar para testes'
         steps:
           - script: |
+              python3 -m venv venv
               source venv/bin/activate
               python -m pip install --upgrade pip
               pip install -r requirements.txt
