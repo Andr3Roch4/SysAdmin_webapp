@@ -92,7 +92,7 @@ stages:
           # Publish test results
           - task: PublishTestResults@2
             inputs:
-              testResultsFiles: '**/*-results.xml'
+              testResultsFiles: '*-results.xml'
               testRunTitle: 'API Test Results'
             condition: succeededOrFailed()
 
