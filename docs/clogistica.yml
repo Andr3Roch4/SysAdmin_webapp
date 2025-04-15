@@ -949,15 +949,29 @@ paths:
 
   /impacto:
     post:
+      tags:
+        - impacto
       summary: Calcular o impacto ambiental de um produto
       operationId: calcularImpacto
-      parameters:
-        - name: produtoId
-          in: query
-          required: true
-          schema:
-            type: integer
-          description: ID do produto
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                produto:
+                  type: integer
+                  description: id do produto
+                fornecedor:
+                  type: integer
+                  description: id do fornecedor
+                distribuidor:
+                  type: integer
+                  description: id do distribuidor
+                transportador:
+                  type: integer
+                  description: id do transportador
       responses:
         '200':
           description: Impacto calculado
@@ -968,6 +982,30 @@ paths:
 
   /ideal:
     post:
+      tags:
+        - ideal
+      summary: Calcular o impacto ambiental ideal
+      operationId: calcula o imapcto ideal
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                produto:
+                  type: integer
+                  description: id do produto
+                distribuidor:
+                  type: integer
+                  description: id do distribuidor
+      responses:
+        '200':
+          description: Impacto calculado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Impacto'
 
 components:
   securitySchemes:
@@ -1073,3 +1111,8 @@ components:
         recursosConsumidos:
           type: number
           format: float
+    
+    Ideal:
+      type: object
+      properties:
+        
