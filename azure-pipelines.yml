@@ -60,6 +60,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.12'
+              addToPath: true
           - script: |
               source venv/bin/activate
               python -m pip install --upgrade pip
@@ -72,6 +73,7 @@ stages:
       # realizar testes locais ao API
       - job: Testeslocais
         displayName: 'Realizar testes locais'
+        dependsOn: Preparartestes
         steps:
           - script: |
               python manage.py runserver &
