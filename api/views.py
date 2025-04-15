@@ -177,7 +177,7 @@ def distribuidor(request):
             local=request.POST.get("local").strip().capitalize()
             coefluz=float(request.POST.get("coefluz", 1))
             if Distribuidor.objects.filter(nome__iexact=nome).exists():
-                return JsonResponse({"erro": "Distribuidor já existe na Base de Dados!."}, status=400)
+                return JsonResponse({"erro": "Distribuidor já existe na Base de Dados!."}, status=404)
             else:
                 new_d=Distribuidor.objects.create(nome=nome,local=local,coefLuz=coefluz)
                 return JsonResponse({
@@ -200,7 +200,7 @@ def distribuidor(request):
                 d.local = data.get('local', d.local).strip().capitalize()
                 d.coefLuz = float(data.get('coefluz', d.coefLuz))
                 d.save()
-                return JsonResponse({"mensagem": f'Distribuidor "{d.nome}" atualizado com sucesso'})
+                return JsonResponse({"mensagem": f'Distribuidor "{d.nome}" atualizado com sucesso'}, status=202)
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
         except AttributeError:
@@ -217,7 +217,7 @@ def distribuidor(request):
                 return JsonResponse({"erro": "Distribuidor não encontrado."}, status=404)
             else:
                 d.delete()
-                return JsonResponse({"mensagem": f'Distribuidor com id {id} removido com sucesso.'})
+                return JsonResponse({"mensagem": f'Distribuidor com id {id} removido com sucesso.'}, status=203)
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
         except AttributeError:
@@ -232,7 +232,7 @@ def transportador(request):
         local=request.GET.get("local", "").strip().lower()
         id=request.GET.get("id", "")
         t=Transportador.objects.all().filter(nome__icontains=nome, local__icontains=local, id__icontains=id)
-        return JsonResponse({"transportador":list(t.values())})
+        return JsonResponse({"transportador":list(t.values())}, status=200)
     
     elif request.method == "POST":
         try:
@@ -241,7 +241,7 @@ def transportador(request):
             coefluz=float(request.POST.get("coefluz", 1))
             coefCO2=float(request.POST.get("coefco2", 1))
             if Transportador.objects.filter(nome__iexact=nome).exists():
-                return JsonResponse({"erro": "Transportador já existe na Base de Dados!."}, status=400)
+                return JsonResponse({"erro": "Transportador já existe na Base de Dados!."}, status=404)
             else:
                 new_t=Transportador.objects.create(nome=nome,local=local,coefLuz=coefluz,coefCO2=coefCO2)
                 return JsonResponse({
@@ -265,7 +265,7 @@ def transportador(request):
                 t.coefLuz = float(data.get('coefluz', t.coefLuz))
                 t.coefCO2 = float(data.get('coefco2', t.coefLuz))
                 t.save()
-                return JsonResponse({"mensagem": f'Transportador "{t.nome}" atualizado com sucesso'})
+                return JsonResponse({"mensagem": f'Transportador "{t.nome}" atualizado com sucesso'}, status=202)
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
         except AttributeError:
@@ -282,7 +282,7 @@ def transportador(request):
                 return JsonResponse({"erro": "Transportador não encontrado."}, status=404)
             else:
                 t.delete()
-                return JsonResponse({"mensagem": f'Transportador com id {id} removido com sucesso.'})
+                return JsonResponse({"mensagem": f'Transportador com id {id} removido com sucesso.'}, status=203)
         except json.JSONDecodeError:
             return JsonResponse({"erro": "Formato JSON inválido."}, status=400)
         except AttributeError:
