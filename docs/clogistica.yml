@@ -402,7 +402,7 @@ paths:
                 properties:
                   mensagem:
                     type: string
-                    example: Fornecedor "Updated Supplier" atualizado com sucesso
+                    example: Fornecedor "Nome do fornecedor" atualizado com sucesso
         '400':
           description: Erro na requisição
           content:
@@ -437,7 +437,7 @@ paths:
               properties:
                 id:
                   type: integer
-                  description: Supplier ID to delete
+                  description: id do fornecedor a eliminar
               required:
                 - id
       responses:
@@ -881,7 +881,7 @@ paths:
     post:
       tags:
         - impacto
-      summary: Calcular o impacto ambiental de um produto
+      summary: Calcular o impacto ambiental de um produto, com os dados do gasto da luz, co2 e agua da cadeia inteira
       operationId: calcularImpacto
       requestBody:
         required: true
@@ -940,8 +940,8 @@ paths:
     post:
       tags:
         - ideal
-      summary: Calcular o impacto ambiental ideal
-      operationId: calcula o imapcto ideal
+      summary: Calcula a cadeia logistica com menor impacto ambiental, escolhe o melhor fornecedor e transportador
+      operationId: calculamelhorcadeia
       requestBody:
         required: true
         content:
@@ -955,6 +955,9 @@ paths:
                 distribuidor:
                   type: integer
                   description: id do distribuidor
+                required:
+                  - produto
+                  - distribuidor
       responses:
         '200':
           description: Impacto calculado
