@@ -10,7 +10,7 @@ pool:
   name: Local
 
 variables: 
-    imageTag: $(date +"%d%m%Y")
+    imageTag: $(Build.BuildId)$(date +"%d%m%Y")
 
 stages:
   - stage: build
@@ -44,7 +44,7 @@ stages:
               ACR_PASSWORD: $(AzureHubG3pass)
         # Build the image
           - script: |
-              echo "Building timestamp: $(Build.BuildId)$(imageTag)"
+              echo "Building timestamp: $(date +"%d%m%Y")"
               docker build -t AzureHubG3.azurecr.io/api:$(imageTag) -f ./Dockerfile .
               docker push AzureHubG3.azurecr.io/api:$(imageTag)
             displayName: 'Build and save Docker image'
