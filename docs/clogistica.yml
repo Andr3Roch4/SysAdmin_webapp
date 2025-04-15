@@ -29,7 +29,7 @@ paths:
     get:
       tags:
         - produto
-      summary: Listar todos os produtos
+      summary: Listar produtos
       operationId: listarProdutos
       parameters: 
         - name: nome
@@ -56,41 +56,79 @@ paths:
           content:
             application/json:
               schema:
-                type: array
+                type: array  #Ou object??????
                 items:
                   $ref: '#/components/schemas/Produto'
-
     post:
-      summary: Criar um novo produto
-      operationId: criarProduto
+      summary: Cria um novo produto
+      description: Cria um novo produto na base de dados
       requestBody:
-        description: parametros para criar produto 
         required: true
         content:
-          application/json:
+          application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
                 nome:
                   type: string
+                  description: Nome do produto
                 peso_carregamento:
                   type: integer
+                  description: Peso de carregamento do produto
                 agua:
                   type: integer
+                  description: Consumo de água do produto
                 luz:
                   type: integer
+                  description: Consumo de luz do produto
                 co2:
                   type: integer
+                  description: Emissão de CO2 do produto
                 cat:
                   type: string
+                  description: Categoria do produto
+              required:
+                - nome
+                - peso_carregamento
+                - agua
+                - luz
+                - co2
+                - cat
       responses:
         '201':
-          description: Produto inserido com sucesso
+          description: Produto criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: "Produto 'Nome do Produto' inserido com sucesso!"
         '400':
-          description: Erro ao criar produto
+          description: Erro na requisição
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: "Produto já existe na Base de Dados!."
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: "Faltam parâmetros."
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: "Valor inválido."
     put:
-      summary: Atualizar um produto
-      operationId: atualizarProduto
+      summary: Atualiza um produto existente
+      description: Atualiza os dados de um produto existente
       requestBody:
         required: true
         content:
@@ -100,42 +138,110 @@ paths:
               properties:
                 id:
                   type: integer
+                  description: ID do produto a ser atualizado
                 nome:
                   type: string
+                  description: Novo nome do produto
                 peso_carregamento:
                   type: integer
+                  description: Novo peso de carregamento
                 agua:
                   type: integer
+                  description: Novo consumo de água
                 luz:
                   type: integer
-                co2:
+                  description: Novo consumo de luz
+                CO2:
                   type: integer
+                  description: Nova emissão de CO2
                 cat:
                   type: string
+                  description: Nova categoria
+              required:
+                - id
       responses:
         '200':
           description: Produto atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: 'Produto "Nome do Produto" atualizado com sucesso'
         '400':
-          description: Erro ao criar produto
+          description: Erro na requisição
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: "Formato JSON inválido."
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: "Faltam parâmetros."
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: "Valor inválido."
         '404':
           description: Produto não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: "Produto não encontrado."
     delete:
-      summary: Apagar um produto
-      operationId: apagarProduto
+      summary: Remove um produto
+      description: Remove um produto da base de dados
       parameters:
-        - name: id
-          in: query
-          description: ID do produto a ser eliminado
-          required: true
-          schema:
-            type: integer
+      - name: id
+        in: query
+        description: ID do produto a ser removido
+        required: true
+        schema:
+          type: integer
       responses:
         '200':
-          description: Produto deletado com sucesso
+          description: Produto removido com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: "Produto com id 123 removido com sucesso."
         '400':
-          description: Erro ao criar produto
+          description: Erro na requisição
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: "Valor inválido."
         '404':
           description: Produto não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: "Produto não encontrado."
 
   /fornecedor:
     get:
