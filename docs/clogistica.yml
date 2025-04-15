@@ -674,29 +674,28 @@ paths:
       tags:
         - transportador
       summary: Listar transportadores
-      description: Retorna uma lista de transportadores com possibilidade de filtragem
       parameters:
         - name: nome
           in: query
-          description: Filtro por nome do transportador (busca parcial insensível a maiúsculas)
+          description: Filtrar por nome do transportador
           required: false
           schema:
             type: string
         - name: local
           in: query
-          description: Filtro por localização do transportador (busca parcial insensível a maiúsculas)
+          description: Filtrar por localização do transportador
           required: false
           schema:
             type: string
         - name: id
           in: query
-          description: Filtro por ID do transportador (busca parcial)
+          description: Filtrar por ID do transportador
           required: false
           schema:
             type: integer
       responses:
         '200':
-          description: Lista de transportadores retornada com sucesso
+          description: Lista de transportadores
           content:
             application/json:
               schema:
@@ -708,7 +707,7 @@ paths:
       tags:
         - transportador
       summary: Criar novo transportador
-      description: Cadastra um novo transportador no sistema
+      description: Regista um novo transportador na base de dados
       requestBody:
         required: true
         content:
@@ -721,16 +720,16 @@ paths:
                   description: Nome do transportador (deve ser único)
                 local:
                   type: string
-                  description: Localização base do transportador
+                  description: Cidade de onde partem os camiões
                 coefluz:
                   type: number
                   format: float
-                  description: Coeficiente de luz (padrão 1)
+                  description: Coeficiente de consumo de eletricidade (default=1)
                   default: 1
                 coefco2:
                   type: number
                   format: float
-                  description: Coeficiente de CO2 (padrão 1)
+                  description: Coeficiente de consumo de CO2 (default=1)
                   default: 1
               required:
                 - nome
@@ -771,7 +770,7 @@ paths:
       tags:
         - transportador
       summary: Atualizar transportador
-      description: Atualiza os dados de um transportador existente
+      description: Atualiza os dados de um transportador existente na base de dados
       requestBody:
         required: true
         content:
@@ -834,7 +833,7 @@ paths:
       tags:
         - transportador
       summary: Remover transportador
-      description: Exclui um transportador do sistema
+      description: Exclui um transportador da base de dados
       requestBody:
         required: true
         content:
