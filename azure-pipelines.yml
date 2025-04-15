@@ -65,6 +65,7 @@ stages:
               pip install -r requirements.txt
             displayName: 'Create and activate venv + Install prerequisites'
           - script: |
+              source venv/bin/activate
               pip install schemathesis
               python manage.py migrate
             displayName: 'Install test tool'
@@ -74,6 +75,7 @@ stages:
         dependsOn: Preparartestes
         steps:
           - script: |
+              source venv/bin/activate
               python manage.py runserver &
               sleep 5
             displayName: 'Start server'
