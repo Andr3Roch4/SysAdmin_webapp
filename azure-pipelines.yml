@@ -54,7 +54,7 @@ stages:
       - build
     jobs:
       # preparar deploy local
-      - job: Preparar-testes
+      - job: Preparartestes
         displayName: 'Preparar para testes'
         steps:
           - task: UsePythonVersion@0
@@ -70,7 +70,7 @@ stages:
               python manage.py migrate
             displayName: 'Install test tool'
       # realizar testes locais ao API
-      - job: Testes-locais
+      - job: Testeslocais
         displayName: 'Realizar testes locais'
         steps:
           - script: |
