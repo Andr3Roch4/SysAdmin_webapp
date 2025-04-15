@@ -103,7 +103,7 @@ def fornecedor(request):
             coefCO2=float(request.POST.get('coefco2', 1))
             local=request.POST.get('local').strip().capitalize()
             cat=request.POST.get('cat').strip().capitalize()
-            if Fornecedor.objects.filter(nome=nome).exists():
+            if Fornecedor.objects.filter(nome__iexact=nome).exists():
                 return JsonResponse({"erro": "Fornecedor já existe na Base de Dados!."}, status=400)
             else:
                 fornecedor=Fornecedor.objects.create(
@@ -176,7 +176,7 @@ def distribuidor(request):
             nome=request.POST.get("nome").strip().capitalize()
             local=request.POST.get("local").strip().capitalize()
             coefluz=float(request.POST.get("coefluz", 1))
-            if Distribuidor.objects.filter(nome=nome).exists():
+            if Distribuidor.objects.filter(nome__iexact=nome).exists():
                 return JsonResponse({"erro": "Distribuidor já existe na Base de Dados!."}, status=400)
             else:
                 new_d=Distribuidor.objects.create(nome=nome,local=local,coefLuz=coefluz)
@@ -240,7 +240,7 @@ def transportador(request):
             local=request.POST.get("local").strip().capitalize()
             coefluz=float(request.POST.get("coefluz", 1))
             coefCO2=float(request.POST.get("coefco2", 1))
-            if Transportador.objects.filter(nome=nome).exists():
+            if Transportador.objects.filter(nome__iexact=nome).exists():
                 return JsonResponse({"erro": "Transportador já existe na Base de Dados!."}, status=400)
             else:
                 new_t=Transportador.objects.create(nome=nome,local=local,coefLuz=coefluz,coefCO2=coefCO2)

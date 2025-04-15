@@ -60,6 +60,8 @@ paths:
                 items:
                   $ref: '#/components/schemas/Produto'
     post:
+      tags:
+        - produto
       summary: Cria um novo produto
       description: Cria um novo produto na base de dados
       requestBody:
@@ -127,6 +129,8 @@ paths:
                         type: string
                         example: "Valor inválido."
     put:
+      tags:
+        - produto
       summary: Atualiza um produto existente
       description: Atualiza os dados de um produto existente
       requestBody:
@@ -202,6 +206,8 @@ paths:
                     type: string
                     example: "Produto não encontrado."
     delete:
+      tags:
+        - produto
       summary: Remove um produto
       description: Remove um produto da base de dados
       requestBody:
@@ -250,6 +256,8 @@ paths:
 
   /fornecedor:
     get:
+      tags:
+        - fornecedor
       summary: List or search suppliers
       description: Returns a list of suppliers filtered by query parameters
       parameters:
@@ -283,35 +291,12 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  fornecedor:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          description: Supplier ID
-                        nome:
-                          type: string
-                          description: Supplier name
-                        coefAgua:
-                          type: number
-                          description: Water coefficient
-                        coefLuz:
-                          type: number
-                          description: Light coefficient
-                        coefCO2:
-                          type: number
-                          description: CO2 coefficient
-                        local:
-                          type: string
-                          description: Supplier location
-                        cat:
-                          type: string
-                          description: Supplier category
+                type: array
+                items:
+                  $ref: '#/components/schemas/Fornecedor'
     post:
+      tags:
+        - fornecedor
       summary: Create a new supplier
       description: Creates a new supplier with the provided data
       requestBody:
@@ -379,6 +364,8 @@ paths:
                         type: string
                         example: Valor inválido.
     put:
+      tags:
+        - fornecedor
       summary: Update a supplier
       description: Updates an existing supplier
       requestBody:
@@ -454,6 +441,8 @@ paths:
                     type: string
                     example: Fornecedor não encontrado.
     delete:
+      tags:
+        - fornecedor
       summary: Delete a supplier
       description: Deletes an existing supplier
       requestBody:
@@ -510,7 +499,7 @@ paths:
                   erro:
                     type: string
                     example: Fornecedor não encontrado.
-  /distribuidores:
+  /distribuidor:
     get:
       summary: Listar todos os distribuidores
       operationId: listarDistribuidores
@@ -540,35 +529,234 @@ paths:
               schema:
                 $ref: '#/components/schemas/Distribuidor'
 
-  /transportadores:
+  /transportador:
     get:
-      summary: Listar todos os transportadores
-      operationId: listarTransportadores
+      tags:
+        - transportador
+      summary: Listar transportadores
+      description: Retorna uma lista de transportadores com possibilidade de filtragem
+      parameters:
+        - name: nome
+          in: query
+          description: Filtro por nome do transportador (busca parcial insensível a maiúsculas)
+          required: false
+          schema:
+            type: string
+        - name: local
+          in: query
+          description: Filtro por localização do transportador (busca parcial insensível a maiúsculas)
+          required: false
+          schema:
+            type: string
+        - name: id
+          in: query
+          description: Filtro por ID do transportador (busca parcial)
+          required: false
+          schema:
+            type: string
       responses:
         '200':
-          description: Lista de transportadores
+          description: Lista de transportadores retornada com sucesso
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Transportador'
+
     post:
-      summary: Criar um novo transportador
-      operationId: criarTransportador
+      tags:
+        - transportador
+      summary: Criar novo transportador
+      description: Cadastra um novo transportador no sistema
       requestBody:
         required: true
         content:
-          application/json:
+          application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Transportador'
+              type: object
+              properties:
+                nome:
+                  type: string
+                  description: Nome do transportador (deve ser único)
+                local:
+                  type: string
+                  description: Localização base do transportador
+                coefluz:
+                  type: number
+                  description: Coeficiente de luz (padrão 1)
+                  default: 1
+                coefco2:
+                  type: number
+                  description: Coeficiente de CO2 (padrão 1)
+                  default: 1
+              required:
+                - nome
+                - local
       responses:
         '201':
           description: Transportador criado com sucesso
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Transportador'
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: 'Transportador "Nome do Transportador" inserido com sucesso!'
+        '400':
+          description: Erro na requisição
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Transportador já existe na Base de Dados!
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Faltam parâmetros.
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Valor inválido.
+
+    put:
+      tags:
+        - transportador
+      summary: Atualizar transportador
+      description: Atualiza os dados de um transportador existente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID do transportador a ser atualizado
+                nome:
+                  type: string
+                  description: Novo nome do transportador
+                local:
+                  type: string
+                  description: Nova localização do transportador
+                coefluz:
+                  type: number
+                  description: Novo coeficiente de luz
+                coefco2:
+                  type: number
+                  description: Novo coeficiente de CO2
+              required:
+                - id
+      responses:
+        '200':
+          description: Transportador atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: 'Transportador "Nome Atualizado" atualizado com sucesso'
+        '400':
+          description: Erro na requisição
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Formato JSON inválido.
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Faltam parâmetros.
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Valor inválido.
+        '404':
+          description: Transportador não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Transportador não encontrado.
+
+    delete:
+      tags:
+        - transportador
+      summary: Remover transportador
+      description: Exclui um transportador do sistema
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID do transportador a ser removido
+              required:
+                - id
+      responses:
+        '200':
+          description: Transportador removido com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: 'Transportador com id 123 removido com sucesso.'
+        '400':
+          description: Erro na requisição
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Formato JSON inválido.
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Faltam parâmetros.
+                  - type: object
+                    properties:
+                      erro:
+                        type: string
+                        example: Valor inválido.
+        '404':
+          description: Transportador não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Transportador não encontrado.
 
   /impacto:
     post:
