@@ -179,12 +179,11 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      erro:
-                        type: string
-                        example: Formato JSON inválido.
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: Formato JSON inválido.
         '404':
           description: Produto não encontrado
           content:
