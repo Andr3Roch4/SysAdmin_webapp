@@ -14,7 +14,7 @@ trigger:
 pr:
   branches:
     include:
-      - main
+      - all
   paths:
     include:
       - api
