@@ -1,18 +1,13 @@
-# Python Django
-# Test a Django project on multiple versions of Python.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/python
-
-trigger:
-  paths:
-    include:
-      - api
-
 pr:
   branches:
     include:
       - main
-  
+  paths:
+    include:
+      - api
+      - docs
+      - webapp
+      - Dockerfile
 
 pool:
   name: Local
@@ -21,29 +16,6 @@ variables:
     imageTag: $(Build.BuildId)$(date +"%d%m%Y")
 
 stages:
-  - stage: build
-    jobs:
-      - job: testevars
-        steps:
-          - script: |
-              echo "##[debug]Listando todas as variáveis de ambiente"
-              printenv | sort
-              echo "##[debug]Build.Reason = $(Build.Reason)"
-              echo "##[debug]System.PullRequest.TargetBranch = $(System.PullRequest.TargetBranch)"
-            displayName: 'Debug: Listar variáveis disponíveis'
-      
-      # Instala o flake8 e executa análise de lint no diretório ./api
-      - job: Flake8
-        displayName: 'Análise flake8'
-        steps:
-          - script: |
-              python3 -m venv venv
-              source venv/bin/activate
-              python -m pip install flake8
-              flake8 ./api
-            displayName: 'Run Python lint'
-            continueOnError: "true"
-              
   - stage: deploy
     condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/main'))
     jobs:
@@ -111,5 +83,3 @@ stages:
               docker build -t AzureHubG3.azurecr.io/api:$(imageTag) -f ./Dockerfile .
               docker push AzureHubG3.azurecr.io/api:$(imageTag)
             displayName: 'Build and save Docker image'
-
-
