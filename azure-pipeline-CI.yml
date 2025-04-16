@@ -1,0 +1,26 @@
+trigger:
+  branches:
+    exclude:
+      - main
+  paths:
+    include:
+      - api
+
+pool:
+  name: Local
+
+
+stages:
+  - stage: build
+    jobs:
+      # Instala o flake8 e executa análise de lint no diretório ./api
+      - job: Flake8
+        displayName: 'Análise flake8'
+        steps:
+          - script: |
+              python3 -m venv venv
+              source venv/bin/activate
+              python -m pip install flake8
+              flake8 ./api
+            displayName: 'Run Python lint'
+            continueOnError: "true"
