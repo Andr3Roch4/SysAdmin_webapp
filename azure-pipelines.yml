@@ -7,7 +7,13 @@ trigger:
   paths:
     include:
       - api
-      
+
+pr:
+  branches:
+    include:
+      - main
+  
+
 pool:
   name: Local
 
@@ -17,9 +23,17 @@ variables:
 stages:
   - stage: build
     jobs:
+      - job: testevars
+        steps:
+          - script: |
+              echo "##[debug]Listando todas as variáveis de ambiente"
+              printenv | sort
+              echo "##[debug]Build.Reason = $(Build.Reason)"
+              echo "##[debug]System.PullRequest.TargetBranch = $(System.PullRequest.TargetBranch)"
+            displayName: 'Debug: Listar variáveis disponíveis'
+      
       # Instala o flake8 e executa análise de lint no diretório ./api
       - job: Flake8
-        condition: ne(variables['Build.Reason'], 'PullRequest')
         displayName: 'Análise flake8'
         steps:
           - script: |
