@@ -1,3 +1,5 @@
+trigger: none
+
 pr:
   branches:
     include:
@@ -17,7 +19,6 @@ variables:
 
 stages:
   - stage: deploy
-    condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/main'))
     jobs:
       # preparar deploy local e realizar testes locais
       - job: Testeslocais
