@@ -15,6 +15,12 @@ pr:
   branches:
     include:
       - main
+  paths:
+    include:
+      - api
+      - webapp
+      - Dockerfile
+      - docs
       
 pool:
   name: Local
@@ -38,7 +44,7 @@ stages:
             continueOnError: "true"
               
   - stage: deploy
-    condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/main'))
+    condition: eq(variables['Build.Reason'], 'PullRequest')
     jobs:
       # preparar deploy local e realizar testes locais
       - job: Testeslocais
