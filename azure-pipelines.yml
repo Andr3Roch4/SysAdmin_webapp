@@ -12,12 +12,6 @@ pr:
   branches:
     include:
       - main
-  paths:
-    include:
-      - api
-      - webapp
-      - Dockerfile
-      - docs
       
 pool:
   name: Local
