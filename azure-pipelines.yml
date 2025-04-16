@@ -16,10 +16,10 @@ variables:
 
 stages:
   - stage: build
-    condition: ne(variables['Build.Reason'], 'PullRequest')
     jobs:
       # Instala o flake8 e executa análise de lint no diretório ./api
       - job: Flake8
+        condition: ne(variables['Build.Reason'], 'PullRequest')
         displayName: 'Análise flake8'
         steps:
           - script: |
