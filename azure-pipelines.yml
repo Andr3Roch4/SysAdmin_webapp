@@ -4,8 +4,24 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
 trigger:
-  - main  # Trigger se houver push para a branch 'main'
+  branches:
+    exclude:
+      - main
+  paths:
+    include:
+      - api
 
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - api
+      - webapp
+      - Dockerfile
+      - docs
+      
 pool:
   name: Local
 
@@ -26,33 +42,11 @@ stages:
               flake8 ./api
             displayName: 'Run Python lint'
             continueOnError: "true"
-      # Build da docker image
-      - job: dockerbuild
-        displayName: 'Build docker image'
-        dependsOn: Flake8
-        variables: 
-        - group: g3vars
-        steps:
-          - task: DockerInstaller@0
-            inputs:
-              dockerVersion: '28.0.4'
-
-          - script: |
-              docker login AzureHubG3.azurecr.io -u $(AzureHubG3user) -p $(AzureHubG3pass)
-            displayName: 'Login to container registry'
-            env:
-              ACR_USERNAME: $(AzureHubG3user)
-              ACR_PASSWORD: $(AzureHubG3pass)
-        # Build the image
-          - script: |
-              echo "Building timestamp: $(date +"%d%m%Y")"
-              docker build -t AzureHubG3.azurecr.io/api:$(imageTag) -f ./Dockerfile .
-              docker push AzureHubG3.azurecr.io/api:$(imageTag)
-            displayName: 'Build and save Docker image'
               
   - stage: deploy
     dependsOn: 
       - build
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/main'))
     jobs:
       # preparar deploy local e realizar testes locais
       - job: Testeslocais
@@ -95,5 +89,28 @@ stages:
               testResultsFiles: '*-results.xml'
               testRunTitle: 'API Test Results'
             condition: succeededOrFailed()
+      # Build da docker image
+      - job: dockerbuild
+        displayName: 'Build docker image'
+        dependsOn: Testeslocais
+        variables: 
+        - group: g3vars
+        steps:
+          - task: DockerInstaller@0
+            inputs:
+              dockerVersion: '28.0.4'
+
+          - script: |
+              docker login AzureHubG3.azurecr.io -u $(AzureHubG3user) -p $(AzureHubG3pass)
+            displayName: 'Login to container registry'
+            env:
+              ACR_USERNAME: $(AzureHubG3user)
+              ACR_PASSWORD: $(AzureHubG3pass)
+        # Build the image
+          - script: |
+              echo "Building timestamp: $(date +"%d%m%Y")"
+              docker build -t AzureHubG3.azurecr.io/api:$(imageTag) -f ./Dockerfile .
+              docker push AzureHubG3.azurecr.io/api:$(imageTag)
+            displayName: 'Build and save Docker image'
 
 
