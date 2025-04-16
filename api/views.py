@@ -277,7 +277,7 @@ def transportador(request):
         try:
             data = json.loads(request.body)
             id = data.get('id')                                         # Obter o ID do transportador
-            t = Transportador.objects.filter(id=id).first()             # Buscar o transportador com o ID
+            t = Transportador.objects.filter(id=id).first()             # Buscar o transportador com o ID.
             if not t:
                 return JsonResponse({"erro": "Transportador não encontrado."}, status=404)
             else:
