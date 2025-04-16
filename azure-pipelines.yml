@@ -5,8 +5,8 @@
 
 trigger:
   branches:
-    exclude:
-      - main
+    include:
+      - all
   paths:
     include:
       - api
@@ -14,7 +14,7 @@ trigger:
 pr:
   branches:
     include:
-      - all
+      - main
   paths:
     include:
       - api
@@ -44,7 +44,7 @@ stages:
             continueOnError: "true"
               
   - stage: deploy
-    condition: eq(variables['Build.Reason'], 'PullRequest')
+    condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/main'))
     jobs:
       # preparar deploy local e realizar testes locais
       - job: Testeslocais
