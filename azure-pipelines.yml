@@ -44,9 +44,7 @@ stages:
             continueOnError: "true"
               
   - stage: deploy
-    dependsOn: 
-      - build
-    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/main'))
+    condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/main'))
     jobs:
       # preparar deploy local e realizar testes locais
       - job: Testeslocais
