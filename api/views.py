@@ -7,7 +7,7 @@ import csv
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-# Create your views here.
+# Create your views here..
 
 @csrf_exempt
 def produto(request):
