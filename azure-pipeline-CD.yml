@@ -1,3 +1,5 @@
+trigger: none
+
 pr:
   branches:
     include:
@@ -17,7 +19,6 @@ variables:
 
 stages:
   - stage: deploy
-    condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/main'))
     jobs:
       # preparar deploy local e realizar testes locais
       - job: Testeslocais
@@ -46,19 +47,24 @@ stages:
               fi
             displayName: 'Acceptance test'
             continueOnError: "false"
-          - script: 
+          - script: |
               source venv/bin/activate
+              echo "Running schemathesis tests..."
               schemathesis run --base-url=http://localhost:8000/api docs/clogistica.yml \
                 --checks=all \
                 --validate-schema=true \
                 --hypothesis-max-examples=5 \
-                --junit-xml=schemathesis-results.xml
+                --junit-xml=$(System.DefaultWorkingDirectory)/schemathesis-results.xml \
+                --show-errors-tracebacks
+              echo "Schemathesis exit code: $?"
             displayName: 'Run API contract tests'
+            workingDirectory: $(System.DefaultWorkingDirectory)
           # Publish test results
           - task: PublishTestResults@2
             inputs:
-              testResultsFiles: '*-results.xml'
+              testResultsFiles: '$(System.DefaultWorkingDirectory)/schemathesis-results.xml'
               testRunTitle: 'API Test Results'
+              mergeTestResults: true
             condition: succeededOrFailed()
       # Build da docker image
       - job: dockerbuild
