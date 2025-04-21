@@ -8,7 +8,8 @@ on:
       - walter
       - andre
     paths:
-      - api
+      - api/
+      - .github/
 
 # Permiçao de read
 permissions:
