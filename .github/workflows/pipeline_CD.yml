@@ -43,7 +43,7 @@ jobs:
             --checks=all \
             --validate-schema=true \
             --hypothesis-max-examples=5 \
-            --junit-xml=$(System.DefaultWorkingDirectory)/schemathesis-results.xml \
+            --junit-xml=schemathesis-results.xml \
             --show-errors-tracebacks
           echo "Schemathesis exit code: $?"
       - name: Locust test
