@@ -8,8 +8,8 @@ on:
       - walter
       - andre
     paths:
-      - 'api/'
-      - '.github/workflows/'
+      - 'api/**'
+      - '.github/workflows/**'
 
 # Permiçao de read
 permissions:
