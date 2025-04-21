@@ -68,7 +68,8 @@ TesteAPI:
     - if [[ "$RESPONSE" -ge 200 && "$RESPONSE" -lt 300 ]]; then echo "Request succeeded with status code $RESPONSE."; else echo "Request failed with status code $RESPONSE."; exit 1; fi
     - source venv/bin/activate
     - echo "Running schemathesis tests..."
-    - schemathesis run --base-url=http://localhost:8000/api docs/clogistica.yml \
+    - |
+      schemathesis run --base-url=http://localhost:8000/api docs/clogistica.yml \
         --checks=all \
         --validate-schema=true \
         --hypothesis-max-examples=5 \
