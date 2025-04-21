@@ -2,7 +2,7 @@ image: python:3.12-slim
 
 workflow:
   rules:
-    - when: always
+    - when: always   # Alterei apenas para testes
   # - if: '$CI_COMMIT_BRANCH != "main"'
 
 stages:
@@ -54,15 +54,17 @@ dockerbuild:
     - TesteAPI
   image: docker:latest
   services:
-    - docker:dind
+    - docker:dind   # daemon Docker
   script:
+    - export DATE=$(date +'%d%m%Y')
+    - export IMAGE_TAG="$CI_PIPELINE_ID$DATE"
+    - echo "Tag da imagem $IMAGE_TAG"
     - docker login AzureHubG3.azurecr.io -u $AzureHubG3user -p $AzureHubG3pass
-    - echo "Building timestamp $(date +"%d%m%Y")"
-    - docker build -t AzureHubG3.azurecr.io/api:$CI_PIPELINE_ID -f ./Dockerfile .
-    - docker push AzureHubG3.azurecr.io/api:$CI_PIPELINE_ID
+    - docker build -t AzureHubG3.azurecr.io/api:$IMAGE_TAG -f ./Dockerfile .
+    - docker push AzureHubG3.azurecr.io/api:$IMAGE_TAG
   variables:
-    DOCKER_HOST: tcp://docker:2375/
-    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: tcp://docker:2375/   # Permite que o Docker CLI se conecte ao daemon
+    DOCKER_TLS_CERTDIR: ""            # Desativa TLS que quebra em pipelines sem volume persistente
     AzureHubG3user: $CI_AZURE_USER  # Variáveis  no GitLab
     AzureHubG3pass: $CI_AZURE_PASS  # Variáveis  no GitLab
   allow_failure: false
