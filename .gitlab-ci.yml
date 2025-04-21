@@ -3,7 +3,7 @@ image: ubuntu:24.04
 workflow:
   rules:
     - if: '$CI_COMMIT_BRANCH != "main"'
-
+    - when: always  # fallback to always run
 stages:
   - build
 
@@ -13,7 +13,7 @@ Flake8:
   rules:
     - changes:
       - api/**/*
-      
+
   script: |
     python3 -m venv venv
     source venv/bin/activate
