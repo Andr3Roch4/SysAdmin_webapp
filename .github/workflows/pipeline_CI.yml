@@ -7,6 +7,8 @@ on:
       - pedro
       - walter
       - andre
+    paths:
+      - 'api/**'
 
 # Permiçao de read
 permissions:

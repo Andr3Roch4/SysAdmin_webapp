@@ -3,9 +3,9 @@ on:
     branches:
       - main
     paths:
-      - api
-      - Dockerfile
-      - webapp
+      - 'api/**'
+      - 'Dockerfile'
+      - 'webapp/**'
 
 jobs:
   acceptance_tests:
