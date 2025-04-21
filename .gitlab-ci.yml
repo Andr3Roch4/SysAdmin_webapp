@@ -55,6 +55,7 @@ Testeslocais:
 TesteAPI:
   stage: deploy
   script:
+    - apt-get update && apt-get install -y curl
     - python3 -m venv venv
     - source venv/bin/activate
     - pip install --upgrade pip
