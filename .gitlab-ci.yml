@@ -6,6 +6,7 @@ workflow:
 
 stages:
   - build
+  - deploy
 
 Flake8:
   stage: build
@@ -19,3 +20,36 @@ Flake8:
     - source venv/bin/activate
     - python -m pip install flake8
     - flake8 ./api
+
+
+Testeslocais:
+  stage: deploy
+  script:
+    - python3 -m venv venv
+    - source venv/bin/activate
+    - python -m pip install --upgrade pip
+    - pip install -r requirements.txt
+    - pip install schemathesis
+    - python manage.py migrate
+    - source venv/bin/activate
+    - python manage.py runserver &
+    - sleep 5
+    - RESPONSE=$(curl --write-out "%{http_code}" --silent --output /dev/null http://localhost:8000/api/produto)
+    - if [[ "$RESPONSE" -ge 200 && "$RESPONSE" -lt 300 ]]; then
+        echo "Request succeeded with status code $RESPONSE."
+      else
+        echo "Request failed with status code $RESPONSE."
+        exit 1
+      fi
+    - source venv/bin/activate
+    - echo "Running schemathesis tests..."
+    - schemathesis run --base-url=http://localhost:8000/api docs/clogistica.yml \
+        --checks=all \
+        --validate-schema=true \
+        --hypothesis-max-examples=5 \
+        --junit-xml=$CI_PROJECT_DIR/schemathesis-results.xml \
+        --show-errors-tracebacks
+    - echo "Schemathesis exit code $?"
+
+Preparar e realizar testes locais:
+  allow_failure: false
