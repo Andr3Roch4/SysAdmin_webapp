@@ -2,10 +2,7 @@ name: pipeline CI
 
 on:
   push:
-    branches-ignore:
-      - main
-    paths:
-      - api
+    branches-ignore: [ "main" ]
 
 # Permiçao de read
 permissions:
