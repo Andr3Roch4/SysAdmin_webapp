@@ -2,7 +2,9 @@ name: pipeline CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - '*'
+      - '!main'
 
 # Permiçao de read
 permissions:
