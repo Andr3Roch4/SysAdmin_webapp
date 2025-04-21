@@ -31,6 +31,7 @@ Testeslocais:
     - python -m pip install --upgrade pip
     - pip install -r requirements.txt
     - pip install schemathesis
+    - apt-get update && apt-get install -y curl
     - python manage.py migrate
     - source venv/bin/activate
     - python manage.py runserver &
