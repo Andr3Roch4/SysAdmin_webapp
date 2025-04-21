@@ -1,0 +1,21 @@
+image: ubuntu:24.04
+
+workflow:
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "main"'
+
+stages:
+  - build
+
+Flake8:
+  stage: build
+  allow_failure: true
+  rules:
+    - changes:
+      - api/**/*
+      
+  script: |
+    python3 -m venv venv
+    source venv/bin/activate
+    python -m pip install flake8
+    flake8 ./api
