@@ -2,10 +2,6 @@ name: pipeline CI
 
 on:
   push:
-    branches:
-      - dev
-      - pedro
-      - walter
     branches-ignore:
       - main
 
