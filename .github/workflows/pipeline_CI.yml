@@ -9,7 +9,6 @@ on:
       - andre
     paths:
       - 'api/**'
-      - '.github/workflows/**'
 
 # Permiçao de read
 permissions:
