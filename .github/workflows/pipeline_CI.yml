@@ -3,8 +3,10 @@ name: pipeline CI
 on:
   push:
     branches:
-      - '*'
-      - '!main'
+      - dev
+      - pedro
+      - walter
+      - andre
 
 # Permiçao de read
 permissions:
