@@ -63,7 +63,7 @@ dockerbuild:
     - export DATE=$(date +'%d%m%Y')
     - export IMAGE_TAG="$CI_PIPELINE_ID$DATE"
     - echo "Tag da imagem $IMAGE_TAG"
-    - docker login AzureHubG3.azurecr.io -u $AzureHubG3user -p $AzureHubG3pass
+    - docker login AzureHubG3.azurecr.io -u $AzureHubG3user -p $AzureHubG3pass --password-stdin
     - docker build -t AzureHubG3.azurecr.io/api:$IMAGE_TAG -f ./Dockerfile .
     - docker push AzureHubG3.azurecr.io/api:$IMAGE_TAG
   variables:
