@@ -65,16 +65,16 @@ dockerbuild:
     - export DATE=$(date +'%d%m%Y')
     - export IMAGE_TAG="$CI_PIPELINE_ID$DATE"
     - echo "Tag da imagem $IMAGE_TAG"
-    - echo $(AzureHubG3user)
-    - echo $(AzureHubG3pass)
+    - echo $AzureHubG3user
+    - echo $AzureHubG3pass
     - docker login AzureHubG3.azurecr.io -u $AzureHubG3user -p $AzureHubG3pass --password-stdin
     - docker build -t AzureHubG3.azurecr.io/api:$IMAGE_TAG -f ./Dockerfile .
     - docker push AzureHubG3.azurecr.io/api:$IMAGE_TAG
   variables:
     DOCKER_HOST: tcp://docker:2375/   # Permite que o Docker CLI se conecte ao daemon
     DOCKER_TLS_CERTDIR: ""            # Desativa TLS que quebra em pipelines sem volume persistente
-    AzureHubG3user: $CI_AZURE_USER  # Variáveis  no GitLab
-    AzureHubG3pass: $CI_AZURE_PASS  # Variáveis  no GitLab
+    #AzureHubG3user: $CI_AZURE_USER  # Variáveis  no GitLab
+    #AzureHubG3pass: $CI_AZURE_PASS  # Variáveis  no GitLab
   allow_failure: false
 
 
