@@ -58,7 +58,7 @@ jobs:
           docker login AzureHubG3.azurecr.io -u ${{ secrets.ACR_USER }} -p ${{ secrets.ACR_PASS }}
       - name: build and push docker image
         env:
-          imageTag: $(Build.BuildId)$(date +"%d%m%Y")
+          imageTag: $(date +"%d%m%Y")
         run: |
           echo "Building timestamp: $(date +"%d%m%Y")"
             docker build -t AzureHubG3.azurecr.io/api:$(imageTag) -f ./Dockerfile .
