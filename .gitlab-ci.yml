@@ -2,6 +2,8 @@ image: python:3.12-slim
 
 workflow:
   rules:
+    - changes:
+      - api/**/*
   #  - when: always   # Alterei apenas para testes
     - if: '$CI_COMMIT_BRANCH != "main"'
       when: never
@@ -14,10 +16,6 @@ stages:
 Flake8:
   stage: build
   allow_failure: true
-  rules:
-    - changes:
-      - api/**/*
-
   script:
     - python3 -m venv venv
     - source venv/bin/activate
@@ -26,6 +24,8 @@ Flake8:
 
 TestarAPI:
   stage: deploy
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
   script:
     - apt-get update && apt-get install -y curl
     - python3 -m venv venv
@@ -54,6 +54,8 @@ dockerbuild:
   stage: deploy
   needs:
     - TestarAPI
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
   image: docker:latest
   services:
     - docker:dind   # daemon Docker
