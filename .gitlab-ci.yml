@@ -16,7 +16,8 @@ stages:
 Flake8:
   stage: build
   rules:
-    - if: '$CI_PIPELINE_SOURCE != "merge_request_event"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
   allow_failure: true
   script:
     - python3 -m venv venv
