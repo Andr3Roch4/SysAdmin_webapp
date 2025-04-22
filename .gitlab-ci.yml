@@ -4,6 +4,8 @@ workflow:
   rules:
   #  - when: always   # Alterei apenas para testes
     - if: '$CI_COMMIT_BRANCH != "main"'
+      when: never
+    - when: always
 
 stages:
   - build
