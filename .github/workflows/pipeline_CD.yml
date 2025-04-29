@@ -1,0 +1,63 @@
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'api/**'
+      - 'Dockerfile'
+      - 'webapp/**'
+
+jobs:
+  acceptance_tests:
+    name: Testes de aceitação
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install schemathesis
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Run server
+        run: |
+          python manage.py runserver &
+          sleep 5
+      - name: Acceptance test
+        run: |
+          RESPONSE=$(curl --write-out "%{http_code}" --silent --output /dev/null http://localhost:8000/api/produto)
+          if [[ "$RESPONSE" -ge 200 && "$RESPONSE" -lt 300 ]]; then
+            echo "Request succeeded with status code $RESPONSE."
+          else
+            echo "Request failed with status code $RESPONSE."
+            exit 1
+          fi
+        continue-on-error: false
+      - name: Shemathesis test
+        run: |
+          echo "Running schemathesis tests..."
+          schemathesis run --base-url=http://localhost:8000/api docs/clogistica.yml \
+            --checks=all \
+            --validate-schema=true \
+            --hypothesis-max-examples=5 \
+            --junit-xml=schemathesis-results.xml \
+            --show-errors-tracebacks
+          echo "Schemathesis exit code: $?"
+
+  docker_image_build:
+    name: Docker image build
+    runs-on: ubuntu-latest
+    needs: acceptance_tests
+    steps:
+      - uses: actions/checkout@v4
+      - name: login to ACR
+        run: |
+          docker login AzureHubG3.azurecr.io -u ${{ secrets.ACR_USER }} -p ${{ secrets.ACR_PASS }}
+      - name: build and push docker image
+        run: |
+          echo "Building timestamp: $(date +"%d%m%Y")"
+            docker build -t AzureHubG3.azurecr.io/api:$(date +"%d%m%Y") -f ./Dockerfile .
+            docker push AzureHubG3.azurecr.io/api:$(date +"%d%m%Y")
