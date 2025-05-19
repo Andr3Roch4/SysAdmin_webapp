@@ -19,6 +19,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", include("cadeialogistica.urls")),
-    path("api/", include("api.urls"))
+    path('p/', include('django_prometheus.urls')),
+    path('', include("cadeialogistica.urls")),
+    path('api/', include("api.urls"))
 ]
