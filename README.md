@@ -9,3 +9,7 @@ Este projeto teve como objetivos:
 
 2- Criar um deployment com a imagem que contém a aplicação
 
+
+(
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update)
