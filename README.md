@@ -1,1 +1,11 @@
-df
+# Modulo 7 - Projeto 2 - Segurança em Azure
+
+Este projeto teve como objetivos:
+1. Fazer deploy no Azure Kubernetes Services (AKS) da aplicação desenvolvida anteriormente
+2. 
+
+
+1- Criar um serviço de LoadBalancer
+
+2- Criar um deployment com a imagem que contém a aplicação
+
