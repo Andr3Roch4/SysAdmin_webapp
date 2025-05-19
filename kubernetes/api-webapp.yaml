@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: api-webapp
-        image: azurehubg3.azurecr.io/api:178016938122042025
+        image: azurehubg3.azurecr.io/api:latest
         resources:
           requests:
             memory: "1Gi"
