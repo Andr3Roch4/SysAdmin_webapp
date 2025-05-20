@@ -4,3 +4,4 @@ whitenoise
 gunicorn
 python-dotenv
 django-cors-headers
+django-prometheus
