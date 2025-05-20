@@ -13,3 +13,12 @@ Este projeto teve como objetivos:
 (
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update)
+
+
+MINIKUBE:
+
+minikube start
+
+alias kubectl="minikube kubectl --"
+
+kubectl create secret generic regcred     --from-file=.dockerconfigjson=<path-to>/.docker/config.json     --type=kubernetes.io/dockerconfigjson
