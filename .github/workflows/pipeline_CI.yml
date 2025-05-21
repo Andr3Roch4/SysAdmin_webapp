@@ -39,10 +39,10 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 api/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
+      uses: aquasecurity/trivy-action@0.28.0
       with:
         scan-type: 'fs'
-        scan-ref: '../.'
+        scan-ref: '.'
         severity: HIGH,CRITICAL
         exit-code: 1
 
