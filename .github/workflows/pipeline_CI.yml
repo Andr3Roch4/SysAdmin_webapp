@@ -9,6 +9,8 @@ on:
       - andre
     paths:
       - 'api/**'
+      - '.github/workflows/**'
+      
 
 # Permiçao de read
 permissions:
@@ -43,5 +45,4 @@ jobs:
         scan-ref: '.'
         severity: HIGH,CRITICAL
         exit-code: 1
-        ignore-unfixed: true
 
