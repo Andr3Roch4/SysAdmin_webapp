@@ -28,7 +28,15 @@ spec:
           limits:
             memory: "1Gi"
             cpu: "500m"
+        volumeMounts:
+          - mountPath: "/data"
+            name: volume
+            readOnly: false
         ports:
-        - containerPort: 8000
+        - containerPort: 80
       imagePullSecrets:
       - name: regcred
+      volumes:
+      - name: volume
+        persistentVolumeClaim:
+          claimName: azure-managed-disk
