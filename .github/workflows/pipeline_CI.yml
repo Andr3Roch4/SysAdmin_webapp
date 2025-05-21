@@ -45,5 +45,5 @@ jobs:
         scan-ref: '.'
         severity: HIGH,CRITICAL
         exit-code: 1
-        scanners: 'config,secrets'
+        scanners: 'config,secret'
 
