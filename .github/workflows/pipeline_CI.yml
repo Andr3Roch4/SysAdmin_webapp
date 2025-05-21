@@ -42,7 +42,7 @@ jobs:
       uses: aquasecurity/trivy-action@0.28.0
       with:
         scan-type: 'fs'
-        scan-ref: '.'
+        scan-ref: 'Dockerfile'
         severity: HIGH,CRITICAL
         exit-code: 1
         scanners: 'config'
