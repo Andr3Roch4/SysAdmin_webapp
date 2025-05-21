@@ -46,6 +46,13 @@ jobs:
             --junit-xml=schemathesis-results.xml \
             --show-errors-tracebacks
           echo "Schemathesis exit code: $?"
+      - name: Run ZAP API Scan
+        uses: zaproxy/action-full-scan@v0.5.0
+        with:
+          target: 'http://localhost:8000/api/'
+          openapi_url: './docs/clogistica.yml'  # Relative path from workspace root
+          context: 'django_api_context'
+          policy: 'API-scan-minimal'
 
   docker_image_build:
     name: Docker image build
