@@ -7,6 +7,9 @@ on:
       - 'Dockerfile'
       - 'webapp/**'
 
+env:
+  IMG_NAME: AzureHubG3.azurecr.io/api:$(date +"%d%m%Y")
+
 jobs:
   acceptance_tests:
     name: Testes de aceitação
@@ -66,11 +69,12 @@ jobs:
       - name: Build docker image
         run: |
           echo "Building timestamp: $(date +"%d%m%Y")"
-            docker build -t AzureHubG3.azurecr.io/api:$(date +"%d%m%Y") -f ./Dockerfile .
+          echo "Image tag: $IMG_NAME"
+            docker build -t $IMG_NAME -f ./Dockerfile .
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: 'AzureHubG3.azurecr.io/api:$(date +"%d%m%Y")'
+          image-ref: '$IMG_NAME'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -78,4 +82,4 @@ jobs:
           severity: 'CRITICAL,HIGH'
       - name: Push docker image
         run: |
-          docker push AzureHubG3.azurecr.io/api:$(date +"%d%m%Y")
+          docker push $IMG_NAME
