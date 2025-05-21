@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: django-app-monitor
+  labels:
+    release: prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app: api
+  endpoints:
+  - port: http 
+    path: /p/metrics
+    interval: 15s
