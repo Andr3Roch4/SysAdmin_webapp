@@ -13,10 +13,14 @@ spec:
     metadata:
       labels:
         app: api
+      annotations:
+        prometheus.io/scrape: "true"           # Tells Prometheus to scrape this app
+        prometheus.io/port: "80"               # The port where metrics are exposed (should match containerPort)
+        prometheus.io/path: "/p/metrics"         # The path where metrics are exposed
     spec:
       containers:
       - name: api-webapp
-        image: azurehubg3.azurecr.io/api:latest
+        image: azurehubg3.azurecr.io/api:20052025
         resources:
           requests:
             memory: "1Gi"
