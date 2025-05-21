@@ -56,8 +56,19 @@ jobs:
       - name: login to ACR
         run: |
           docker login AzureHubG3.azurecr.io -u ${{ secrets.ACR_USER }} -p ${{ secrets.ACR_PASS }}
-      - name: build and push docker image
+      - name: Build docker image
         run: |
           echo "Building timestamp: $(date +"%d%m%Y")"
             docker build -t AzureHubG3.azurecr.io/api:$(date +"%d%m%Y") -f ./Dockerfile .
-            docker push AzureHubG3.azurecr.io/api:$(date +"%d%m%Y")
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: 'AzureHubG3.azurecr.io/api:$(date +"%d%m%Y")'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+      - name: Push docker image
+        run: |
+          docker push AzureHubG3.azurecr.io/api:$(date +"%d%m%Y")
