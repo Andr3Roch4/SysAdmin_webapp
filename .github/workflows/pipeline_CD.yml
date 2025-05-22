@@ -49,6 +49,10 @@ jobs:
     needs: acceptance_tests
     steps:
       - uses: actions/checkout@v4
+      - name: Create .env
+        run: |
+          echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
+          echo "DJANGO_DEBUG=${{ env.DJANGO_DEBUG }}" >> .env
       - name: Build docker image
         run: |
           echo "Building timestamp: $(date +"%d%m%Y")"

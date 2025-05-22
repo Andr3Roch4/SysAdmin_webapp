@@ -1,6 +1,7 @@
 Django
 geopy
 whitenoise
+dotenv
 gunicorn
 python-dotenv
 django-cors-headers
