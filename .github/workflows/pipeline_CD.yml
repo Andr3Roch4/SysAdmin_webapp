@@ -89,7 +89,8 @@ jobs:
           severity: 'CRITICAL,HIGH'
       - name: Run docker image
         run: |
-          docker run $IMG_NAME
+          docker run -d ${{ env.IMG_NAME }} &
+          sleep 5
       - name: Shemathesis test
         run: |
           echo "Running schemathesis tests..."
