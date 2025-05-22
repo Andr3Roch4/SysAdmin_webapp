@@ -34,7 +34,7 @@ jobs:
       - name: Create .env
         run: |
           echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
-          echo "DJANGO_DEBUG=${{ var.DJANGO_DEBUG }}" >> .env
+          echo "DJANGO_DEBUG=${{ env.DJANGO_DEBUG }}" >> .env
       - name: Run server
         run: |
           gunicorn webapp.wsgi --bind=127.0.0.1 &
@@ -58,7 +58,7 @@ jobs:
       - name: Create .env
         run: |
           echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
-          echo "DJANGO_DEBUG=${{ var.DJANGO_DEBUG }}" >> .env
+          echo "DJANGO_DEBUG=${{ env.DJANGO_DEBUG }}" >> .env
           pwd
           cat .env
       - name: Build docker image
