@@ -90,7 +90,7 @@ jobs:
           severity: 'CRITICAL,HIGH'
       - name: Run docker image
         run: |
-          docker run -d ${{ env.IMG_NAME }} &
+          docker run -d -p 8000:8000 ${{ env.IMG_NAME }} &
           sleep 5
       - name: Shemathesis test
         run: |
