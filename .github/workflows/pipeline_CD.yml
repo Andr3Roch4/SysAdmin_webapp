@@ -129,4 +129,5 @@ jobs:
           docker login $IMG_TAG -u ${{ secrets.ACR_USER }} -p ${{ secrets.ACR_PASS }}
       - name: Push docker image
         run: |
+          docker image tag $IMG_NAME $IMG_TAG/$IMG_NAME
           docker push $IMG_TAG/$IMG_NAME
