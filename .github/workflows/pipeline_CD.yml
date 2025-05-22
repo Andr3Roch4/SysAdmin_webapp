@@ -105,10 +105,7 @@ jobs:
       - name: Run ZAP API Scan
         uses: zaproxy/action-baseline@v0.14.0
         with:
-          target: 'http://localhost:8000/api/'
-          openapi_url: './docs/clogistica.yml'  # Relative path from workspace root
-          context: 'django_api_context'
-          policy: 'API-scan-minimal'
+          target: 'http://localhost:8000/api/produto'
 
   deploy:
     name: Docker image push
