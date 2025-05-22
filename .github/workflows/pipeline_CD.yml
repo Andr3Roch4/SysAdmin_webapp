@@ -7,6 +7,12 @@ on:
       - 'Dockerfile'
       - 'webapp/**'
 
+env:
+  IMG_NAME: AzureHubG3.azurecr.io/api:$(date +"%d%m%Y")
+  
+permissions:
+  issues: write
+
 jobs:
   acceptance_tests:
     name: Testes de aceitação
