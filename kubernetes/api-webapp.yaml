@@ -20,7 +20,10 @@ spec:
     spec:
       containers:
       - name: api-webapp
-        image: azurehubg3.azurecr.io/api:20052025
+        image: azurehubg3.azurecr.io/api:latest
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
         resources:
           requests:
             memory: "1Gi"
