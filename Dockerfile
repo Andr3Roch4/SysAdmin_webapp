@@ -14,8 +14,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8000
 
-USER grupo3
-
 RUN python manage.py collectstatic --no-input
+
+USER grupo3
 
 CMD [ "gunicorn", "webapp.wsgi", "--bind=0.0.0.0" ]
