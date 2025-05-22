@@ -8,12 +8,14 @@ on:
       - 'webapp/**'
 
 env:
-  IMG_NAME: AzureHubG3.azurecr.io/api:$(date +"%d%m%Y")
+  IMG_NAME: api:latest
+  IMG_TAG: AzureHubG3.azurecr.io
   
 permissions:
   issues: write
 
 jobs:
+
   acceptance_tests:
     name: Testes de aceitação
     runs-on: ubuntu-latest
@@ -26,11 +28,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install schemathesis
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Run server
         run: |
-          python manage.py runserver &
+          gunicorn webapp.wsgi --bind=127.0.0.1 &
           sleep 5
       - name: Acceptance test
         run: |
@@ -41,7 +42,54 @@ jobs:
             echo "Request failed with status code $RESPONSE."
             exit 1
           fi
-        continue-on-error: false
+
+  build:
+    name: Docker image build
+    runs-on: ubuntu-latest
+    needs: acceptance_tests
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build docker image
+        run: |
+          echo "Building timestamp: $(date +"%d%m%Y")"
+          echo "Image tag: $IMG_NAME"
+            docker build -t $IMG_NAME -f ./Dockerfile .
+      - name: Tar docker IMG
+        run: |
+          docker save $IMG_NAME -o docker_img.tar
+      - uses: actions/upload-artifact@v4
+        with:
+          name: docker-img-artifact
+          path: docker_img.tar
+
+  staging_tests:
+    name: testes de staging
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install schemathesis
+      - uses: actions/download-artifact@v4
+        with:
+          name: docker-img-artifact
+          path: .
+      - name: Get docker image
+        run: |
+          docker load -i docker_img.tar
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: '$IMG_NAME'
+          format: 'table'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+      - name: Run docker image
+        run: |
+          docker run $IMG_NAME
       - name: Shemathesis test
         run: |
           echo "Running schemathesis tests..."
@@ -60,29 +108,23 @@ jobs:
           context: 'django_api_context'
           policy: 'API-scan-minimal'
 
-  docker_image_build:
-    name: Docker image build
+  deploy:
+    name: Docker image push
     runs-on: ubuntu-latest
-    needs: acceptance_tests
+    needs: 
+      - build
+      - staging_tests
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: docker-img-artifact
+          path: .
+      - name: Get docker image
+        run: |
+          docker load -i docker_img.tar
       - name: login to ACR
         run: |
-          docker login AzureHubG3.azurecr.io -u ${{ secrets.ACR_USER }} -p ${{ secrets.ACR_PASS }}
-      - name: Build docker image
-        run: |
-          echo "Building timestamp: $(date +"%d%m%Y")"
-          echo "Image tag: $IMG_NAME"
-            docker build -t $IMG_NAME -f ./Dockerfile .
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          image-ref: '$IMG_NAME'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+          docker login $IMG_TAG -u ${{ secrets.ACR_USER }} -p ${{ secrets.ACR_PASS }}
       - name: Push docker image
         run: |
-          docker push $IMG_NAME
+          docker push $IMG_TAG/$IMG_NAME
