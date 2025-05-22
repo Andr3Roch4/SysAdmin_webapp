@@ -12,6 +12,7 @@ on:
 env:
   IMG_NAME: api:latest
   IMG_TAG: AzureHubG3.azurecr.io
+  DJANGO_DEBUG: "False"
   
 permissions:
   issues: write
