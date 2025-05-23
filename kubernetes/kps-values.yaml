@@ -1,0 +1,40 @@
+nameOverride: prometheus-grupo3
+fullnameOverride: prometheus-grupo3
+
+grafana:
+  enabled: true
+  fullnameOverride: prometheus-grupo3-grafana
+  adminUser: admin
+  adminPassword: grupo3
+  service:
+    type: LoadBalancer
+  ingress:
+    enabled: false
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          access: proxy
+          url: http://prometheus-operated:9090
+          isDefault: true
+          editable: true
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+    podMonitorSelector: {}
+
+serviceMonitors:
+  - name: webapp-metrics
+    selector:
+      matchLabels:
+        app: api
+    namespaceSelector:
+      matchNames:
+        - grupo3
+    endpoints:
+      - port: http
+        path: /p/metrics
+        interval: 15s
