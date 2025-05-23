@@ -7,9 +7,31 @@ Este projeto teve como objetivos:
 4. Integrar testes de penetração da API com OWASP ZAP em pipelines CI/CD
 
 
-1- Criar um serviço de LoadBalancer
+# Deploy no AKS
 
-2- Criar um deployment com a imagem que contém a aplicação
+1- Criar namespace dentro do cluster (grupo3)
+```
+az aks get-credentials --resource-group <RG_name> --name <cluster_name>
+
+kubectl create namespace grupo3
+```
+
+2- Criar um [PersistentVolumeClaim]
+```
+kubectl apply -f api-pvc.yaml
+```
+
+3- Fazer um [Deployment] da aplicação web
+```
+kubectl apply -f api-webapp.yaml
+```
+
+4- Criar um serviço de [LoadBalancer]
+```
+kubectl apply -f api-loadbalancer.yaml
+```
+
+
 
 
 (
@@ -24,3 +46,8 @@ minikube start
 alias kubectl="minikube kubectl --"
 
 kubectl create secret generic regcred     --from-file=.dockerconfigjson=<path-to>/.docker/config.json     --type=kubernetes.io/dockerconfigjson
+
+[PersistentVolumeClaim]: https://gitlab.com/lezz-git-it/webapp/-/blob/main/kubernetes/api-pvc.yaml?ref_type=heads
+[Deployment]: https://gitlab.com/lezz-git-it/webapp/-/blob/main/kubernetes/api-webapp.yaml?ref_type=heads
+[LoadBalancer]:https://gitlab.com/lezz-git-it/webapp/-/blob/main/kubernetes/api-loadbalancer.yaml?ref_type=heads
+[ServiceMonitor]: https://gitlab.com/lezz-git-it/webapp/-/blob/main/kubernetes/api-servicemonitor.yaml?ref_type=heads
