@@ -8,6 +8,7 @@ on:
       - 'api/**'
       - 'Dockerfile'
       - 'webapp/**'
+      - '.github/workflows/**'
 
 env:
   IMG_NAME: api:latest
@@ -34,7 +35,7 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Create .env
         run: |
-          echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
+          echo "DJANGO_SECRET_KEY=1" >> .env
           echo "DJANGO_DEBUG=${{ env.DJANGO_DEBUG }}" >> .env
       - name: Run server
         run: |
@@ -60,14 +61,12 @@ jobs:
         run: |
           echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
           echo "DJANGO_DEBUG=${{ env.DJANGO_DEBUG }}" >> .env
-          pwd
-          cat .env
       - name: Build docker image
         run: |
           echo "Building timestamp: $(date +"%d%m%Y")"
           echo "Image tag: $IMG_NAME"
             docker build -t $IMG_NAME -f ./Dockerfile .
-      - name: Tar docker IMG
+      - name: Tar docker image
         run: |
           docker save $IMG_NAME -o docker_img.tar
       - uses: actions/upload-artifact@v4
@@ -134,10 +133,10 @@ jobs:
       - name: Get docker image
         run: |
           docker load -i docker_img.tar
-      - name: login to ACR
+      - name: Login to ACR
         run: |
           docker login $IMG_TAG -u ${{ secrets.ACR_USER }} -p ${{ secrets.ACR_PASS }}
-      - name: Push docker image
+      - name: Push docker image to ACR
         run: |
           docker image tag $IMG_NAME $IMG_TAG/$IMG_NAME
           docker push $IMG_TAG/$IMG_NAME
