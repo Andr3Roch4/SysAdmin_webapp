@@ -118,7 +118,7 @@ jobs:
       - name: Run ZAP API Scan
         uses: zaproxy/action-baseline@v0.14.0
         with:
-          target: 'http://localhost:8000/api/produto'
+          target: 'http://localhost:8000/api/'
 
   deploy:
     name: Docker image push
