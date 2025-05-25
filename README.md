@@ -1,4 +1,4 @@
-# Modulo 7 - Projeto 2 - Segurança em Azure
+# Modulo 7 - Projeto 2 - DevSecOps
 
 Este projeto teve como objetivos:
 1. Fazer deploy no Azure Kubernetes Services (AKS) da aplicação desenvolvida anteriormente
@@ -9,7 +9,7 @@ Este projeto teve como objetivos:
 
 ## 1. Deploy no AKS
 
-1.1 - Criar namespace dentro do cluster (grupo3)
+**1.1** - Criar namespace dentro do cluster (grupo3)
 ```
 az aks get-credentials --resource-group <RG_name> \
 --name <cluster_name>
@@ -18,12 +18,12 @@ az aks get-credentials --resource-group <RG_name> \
 kubectl create namespace grupo3
 ```
 
-1.2- Criar um [PersistentVolumeClaim]
+**1.2**- Criar um [PersistentVolumeClaim]
 ```
 kubectl apply -f api-pvc.yaml -n grupo3
 ```
 
-1.3- Criar secret para poder aceder ao ACR (Azure Container Registry)
+**1.3**- Criar secret para poder aceder ao ACR (Azure Container Registry)
 ```
 kubectl create secret generic regcred \
 --from-file=.dockerconfigjson=<path-to>/.docker/config.json \
@@ -31,38 +31,38 @@ kubectl create secret generic regcred \
 -n grupo3
 
 ```
-1.4- Fazer um [Deployment] da aplicação web
+**1.4**- Fazer um [Deployment] da aplicação web
 ```
 kubectl apply -f api-webapp.yaml -n grupo3
 ```
 
-1.5- Criar um serviço de [LoadBalancer]
+**1.5**- Criar um serviço de [LoadBalancer]
 ```
 kubectl apply -f api-loadbalancer.yaml -n grupo3
 ```
 
 ## 2. Monitorização com Prometheus e Grafana
 
-2.1- Adicionar o repositório "prometheus-community" ao Helm
+**2.1**- Adicionar o repositório "prometheus-community" ao Helm
 
 ```
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 ```
 
-2.2- Instalar pacote com Prometheus e Grafana
+**2.2**- Instalar pacote com Prometheus e Grafana
 ```
 helm install <RELEASE_NAME> prometheus-community/kube-prometheus-stack \
 -n grupo3 -f config-values.yaml
 ```
 
-2.3- Instalar biblioteca python (django-prometheus) de cliente Prometheus na aplicação web.
+**2.3**- Instalar biblioteca python (django-prometheus) de cliente Prometheus na aplicação web.
 
-2.4- Criar um [ServiceMonitor], para definir onde procurar as métricas e as configurações de monitorização da webapp
+**2.4**- Criar um [ServiceMonitor], para definir onde procurar as métricas e as configurações de monitorização da webapp
 ```
 kubectl apply -f api-servicemonitor.yaml -n grupo3
 ```
-2.5- Configurar [dashboard] no Grafana 
+**2.5**- Configurar [dashboard] no Grafana 
 
 ## 3. Integrar o Trivy (Análise Estática) e OWASP ZAP (PenTest) numa pipeline CI/CD
 
