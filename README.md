@@ -25,7 +25,7 @@ kubectl apply -f api-pvc.yaml -n grupo3
 
 **1.3**- Criar secret para poder aceder ao ACR (Azure Container Registry)
 ```
-kubectl create secret generic regcred \
+kubectl create secret generic <secret_name> \
 --from-file=.dockerconfigjson=<path-to>/.docker/config.json \
 --type=kubernetes.io/dockerconfigjson \
 -n grupo3
